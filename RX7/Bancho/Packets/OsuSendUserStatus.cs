@@ -10,6 +10,7 @@ namespace RX7.Bancho.Packets {
         [RetainDeclarationOrder] public long RankedScore    { get; set; }
         [RetainDeclarationOrder] public float Accuracy      { get; set; }
         [RetainDeclarationOrder] public int Playcount       { get; set; }
+        [RetainDeclarationOrder] public long TotalScore     { get; set; }
         [RetainDeclarationOrder] public int Rank            { get; set; }
     }
 }

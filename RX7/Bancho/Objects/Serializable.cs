@@ -42,6 +42,12 @@ namespace RX7.Bancho.Objects {
                     case "String":
                         propertyInfo.SetValue(this, reader.ReadString());
                         break;
+                    case "Single":
+                        propertyInfo.SetValue(this, reader.ReadSingle());
+                        break;
+                    case "Double":
+                        propertyInfo.SetValue(this, reader.ReadDouble());
+                        break;
                     default:
                         Serializable serializable = (Serializable)Activator.CreateInstance(propertyInfo.PropertyType);
                         serializable?.ReadFromStream(stream);
@@ -51,7 +57,7 @@ namespace RX7.Bancho.Objects {
             }
         }
         public virtual void WriteToStream(Stream stream) {
-            
+
         }
     }
 }
