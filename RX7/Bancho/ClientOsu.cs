@@ -2,25 +2,34 @@ using System.IO;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
 using RX7.Bancho.Objects.Serializables;
+using RX7.Bancho.Packets;
 
 namespace RX7.Bancho {
     public class ClientOsu : TcpClientHandler {
-        public BanchoStatus UserStatus = null;
+        public BanchoPresence UserPresence = null;
         protected override void HandleData(byte[] data) {
-            if (this.UserStatus == null) {
+            if (this.UserPresence == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
 
                 string username = loginReader.ReadLine();
                 string password = loginReader.ReadLine();
                 string settings = loginReader.ReadLine();
 
-                this.UserStatus = new() {
-                    Action          = "User Just Logged in!",
-                    BeatmapChecksum = "This man has not yet entered a Beatmap",
-                    BeatmapId       = -1,
-                    EnabledMods     = 0,
-                    PlayMode        = 0,
-                    Status          = 0
+                this.UserPresence = new BanchoPresence() {
+                    UserId      = 24,
+                    RankedScore = 123123,
+                    TotalScore  = 234324,
+                    Accuracy    = 0.99999f,
+                    Playcount   = 918273,
+                    Rank        = 12,
+                    Status = new Status() {
+                        Action          = "Litearlly nothing",
+                        BeatmapChecksum = "nothing...",
+                        BeatmapId       = 123213213,
+                        EnabledMods     = 0,
+                        PlayMode        = 0,
+                        UserStatus      = 1
+                    }
                 };
             }
 
