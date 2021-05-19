@@ -1,12 +1,4 @@
-﻿using System;
+﻿using RX7.Bancho;
 
-namespace RX7
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-        }
-    }
-}
+Bancho.InitializeBancho("127.0.0.1", 13382);
+Bancho.Start();
