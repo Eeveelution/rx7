@@ -62,8 +62,12 @@ namespace RX7.Bancho {
             switch (packetId) {}
         }
 
+        #region Packets
+
         private void LoginResult(int userId) {
             this.SendData(new BanchoLoginResponse { UserId = userId }.ToBytes());
         }
+
+        #endregion
     }
 }
