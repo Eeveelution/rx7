@@ -11,5 +11,6 @@ namespace RX7.Bancho.Packets {
         [RetainDeclarationOrder] public byte Permissions { get; set; }
         [RetainDeclarationOrder] public float Longnitude { get; set; }
         [RetainDeclarationOrder] public float Latitude { get; set; }
+        [RetainDeclarationOrder] public int AnotherBasedValue { get; set; }
     }
 }

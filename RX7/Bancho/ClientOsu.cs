@@ -42,8 +42,11 @@ namespace RX7.Bancho {
                     Location          = "kurwa",
                     Permissions       = 1,
                     Timezone          = 24,
-                    UserId            = 24
+                    UserId            = 24,
+                    AnotherBasedValue = 0,
                 };
+
+                this.LoginResult(24);
             }
 
             using BanchoReader reader = new(new MemoryStream(data));
@@ -57,6 +60,10 @@ namespace RX7.Bancho {
             using BanchoReader packetReader = new(new MemoryStream(fullPacketBytes));
 
             switch (packetId) {}
+        }
+
+        private void LoginResult(int userId) {
+            this.SendData(new BanchoLoginResponse { UserId = userId }.ToBytes());
         }
     }
 }

@@ -57,7 +57,71 @@ namespace RX7.Bancho.Objects {
             }
         }
         public virtual void WriteToStream(Stream stream) {
+            IOrderedEnumerable<PropertyInfo> properties = from property in this.GetType().GetProperties()
+                                                          where Attribute.IsDefined(property, typeof(RetainDeclarationOrderAttribute))
+                                                          orderby ((RetainDeclarationOrderAttribute) property.GetCustomAttributes(typeof(RetainDeclarationOrderAttribute), false).Single()).Order
+                                                          select property;
 
+            using BanchoWriter writer = new(stream);
+
+            foreach (PropertyInfo propertyInfo in properties) {
+                switch (propertyInfo.PropertyType.Name) {
+                    case "Byte":
+                        byte byteValue = (byte)propertyInfo.GetValue(this);
+                        writer.Write(byteValue);
+                        break;
+                    case "Int32":
+                        int intValue = (int)propertyInfo.GetValue(this);
+                        writer.Write(intValue);
+                        break;
+                    case "Int16":
+                        short shortValue = (short)propertyInfo.GetValue(this);
+                        writer.Write(shortValue);
+                        break;
+                    case "Int64":
+                        long longValue = (long)propertyInfo.GetValue(this);
+                        writer.Write(longValue);
+                        break;
+                    case "UInt32":
+                        uint uintValue = (uint)propertyInfo.GetValue(this);
+                        writer.Write(uintValue);
+                        break;
+                    case "UInt16":
+                        ushort ushortValue = (ushort)propertyInfo.GetValue(this);
+                        writer.Write(ushortValue);
+                        break;
+                    case "UInt64":
+                        ulong ulongValue = (ulong)propertyInfo.GetValue(this);
+                        writer.Write(ulongValue);
+                        break;
+                    case "String":
+                        string stringValue = (string)propertyInfo.GetValue(this);
+                        writer.Write(stringValue);
+                        break;
+                    case "Single":
+                        float singleValue = (float)propertyInfo.GetValue(this);
+                        writer.Write(singleValue);
+                        break;
+                    case "Double":
+                        double doubleValue = (double)propertyInfo.GetValue(this);
+                        writer.Write(doubleValue);
+                        break;
+                    default:
+                        Serializable serializable = (Serializable)Activator.CreateInstance(propertyInfo.PropertyType);
+                        serializable?.ReadFromStream(stream);
+                        propertyInfo.SetValue(this, serializable);
+                        break;
+                }
+            }
+
+        }
+
+        public byte[] ToBytes() {
+            MemoryStream stream = new();
+
+            this.WriteToStream(stream);
+
+            return stream.ToArray();
         }
     }
 }
