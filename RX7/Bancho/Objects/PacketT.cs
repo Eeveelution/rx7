@@ -8,7 +8,8 @@ namespace RX7.Bancho.Objects {
         public bool          Compressed;
         public pSerializable PacketData;
 
-        public Packet() { }
+        public Packet(pSerializable packetData) { this.PacketData = packetData; }
+        public Packet() {}
         public override void ReadFromStream(Stream stream) {
             throw new NotImplementedException();
         }
@@ -18,7 +19,11 @@ namespace RX7.Bancho.Objects {
             writer.Write(this.PacketId);
             writer.Write(this.Compressed);
 
-            this.PacketData.WriteToStream(stream);
+            byte[] packetData = this.PacketData.ToBytes();
+
+            writer.Write(packetData.Length);
+
+            writer.Write(packetData);
         }
     }
 }

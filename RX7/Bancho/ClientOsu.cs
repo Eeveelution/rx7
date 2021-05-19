@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
+using RX7.Bancho.Objects;
 using RX7.Bancho.Objects.Serializables;
 using RX7.Bancho.Packets;
 
@@ -9,6 +11,8 @@ namespace RX7.Bancho {
         public BanchoUserStats UserStats    = null;
         public BanchoPresence  UserPresence = null;
         protected override void HandleData(byte[] data) {
+            Console.WriteLine("got data");
+
             if (this.UserStats == null || this.UserPresence == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
 
@@ -65,7 +69,15 @@ namespace RX7.Bancho {
         #region Packets
 
         private void LoginResult(int userId) {
-            this.SendData(new BanchoLoginResponse { UserId = userId }.ToBytes());
+            Packet<BanchoLoginResponse> loginPacket = new() {
+                PacketId   = 5,
+                Compressed = false,
+                PacketData = new BanchoLoginResponse() {
+                    UserId = userId
+                }
+            };
+
+            this.SendData(loginPacket.ToBytes());
         }
 
         #endregion

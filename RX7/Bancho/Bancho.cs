@@ -14,7 +14,14 @@ namespace RX7.Bancho {
         }
 
         public static void RegisterClient(ClientOsu clientOsu) {
-            //TODO: get stuff from ClientOsu to add
+            string username = clientOsu.UserPresence.Username;
+            int userId = clientOsu.UserPresence.UserId;
+
+            if (!ClientsByUsername.ContainsKey(username))
+                ClientsByUsername.AddOrUpdate(username, clientOsu, null!);
+
+            if (!ClientsByUserId.ContainsKey(userId))
+                ClientsByUserId.AddOrUpdate(userId, clientOsu, null!);
         }
 
         public static void Start() {
