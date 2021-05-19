@@ -5,7 +5,7 @@ using System.Reflection;
 using EeveeTools.Helpers;
 using RX7.Bancho.Attributes;
 
-namespace RX7.Bancho.Objects {
+namespace RX7.Bancho.Packets.Objects {
     public abstract class Serializable {
         public Serializable() { }
         public virtual void ReadFromStream(Stream stream) {

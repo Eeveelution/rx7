@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
-using RX7.Bancho.Objects;
-using RX7.Bancho.Objects.Serializables;
 using RX7.Bancho.Packets;
+using RX7.Bancho.Packets.Objects;
+using RX7.Bancho.Packets.Objects.Serializables;
 
 namespace RX7.Bancho {
     public class ClientOsu : TcpClientHandler {
@@ -51,6 +51,8 @@ namespace RX7.Bancho {
                 };
 
                 this.LoginResult(24);
+                this.SendOwnPresence();
+                this.SendOwnStats();
             }
 
             using BanchoReader reader = new(new MemoryStream(data));
@@ -79,7 +81,32 @@ namespace RX7.Bancho {
 
             this.SendData(loginPacket.ToBytes());
         }
+        private void InformPresence(BanchoPresence presence) {
+            Packet<BanchoPresence> presencePacket = new() {
+                PacketId   = 83,
+                Compressed = false,
+                PacketData = presence
+
+            };
+
+            this.SendData(presencePacket.ToBytes());
+        }
+
+        private void InformStats(BanchoUserStats userStats) {
+            Packet<BanchoUserStats> presencePacket = new() {
+                PacketId   = 11,
+                Compressed = false,
+                PacketData = userStats
+
+            };
+
+            this.SendData(presencePacket.ToBytes());
+        }
+
+        private void SendOwnStats() => this.InformStats(this.UserStats);
+        private void SendOwnPresence() => this.InformPresence(this.UserPresence);
 
         #endregion
+
     }
 }

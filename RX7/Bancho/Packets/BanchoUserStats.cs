@@ -1,7 +1,7 @@
 using System.IO;
 using RX7.Bancho.Attributes;
-using RX7.Bancho.Objects;
-using RX7.Bancho.Objects.Serializables;
+using RX7.Bancho.Packets.Objects;
+using RX7.Bancho.Packets.Objects.Serializables;
 
 namespace RX7.Bancho.Packets {
     public class BanchoUserStats : Serializable {

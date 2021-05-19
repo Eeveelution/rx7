@@ -1,7 +1,8 @@
 using RX7.Bancho.Attributes;
+using RX7.Bancho.Packets.Objects;
 
 namespace RX7.Bancho.Packets {
-    public class BanchoPresence {
+    public class BanchoPresence : Serializable {
         [RetainDeclarationOrder] public int UserId          { get; set; }
         [RetainDeclarationOrder] public string Username { get; set; }
         [RetainDeclarationOrder] public byte AvatarExtension { get; set; }

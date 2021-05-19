@@ -1,6 +1,6 @@
 using RX7.Bancho.Attributes;
 
-namespace RX7.Bancho.Objects.Serializables {
+namespace RX7.Bancho.Packets.Objects.Serializables {
     public class Status : Serializable {
         [RetainDeclarationOrder] public byte UserStatus { get; set; }
         [RetainDeclarationOrder] public string Action { get; set; }

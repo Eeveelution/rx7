@@ -2,13 +2,11 @@ using System;
 using System.IO;
 using EeveeTools.Helpers;
 
-namespace RX7.Bancho.Objects {
+namespace RX7.Bancho.Packets.Objects {
     public class Packet<pSerializable> : Serializable where pSerializable : Serializable {
         public ushort        PacketId;
         public bool          Compressed;
         public pSerializable PacketData;
-
-        public Packet(pSerializable packetData) { this.PacketData = packetData; }
         public Packet() {}
         public override void ReadFromStream(Stream stream) {
             throw new NotImplementedException();
