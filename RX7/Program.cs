@@ -22,7 +22,7 @@ writer.Write(576657765);
 
 byte[] written = stream.ToArray();
 
-BanchoPresence status = new();
+BanchoUserStats status = new();
 status.ReadFromStream(new MemoryStream(written));
 
 Bancho.InitializeBancho("127.0.0.1", 13382);

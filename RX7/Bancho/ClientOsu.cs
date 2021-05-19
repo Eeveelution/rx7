@@ -6,16 +6,17 @@ using RX7.Bancho.Packets;
 
 namespace RX7.Bancho {
     public class ClientOsu : TcpClientHandler {
-        public BanchoPresence UserPresence = null;
+        public BanchoUserStats UserStats    = null;
+        public BanchoPresence  UserPresence = null;
         protected override void HandleData(byte[] data) {
-            if (this.UserPresence == null) {
+            if (this.UserStats == null || this.UserPresence == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
 
                 string username = loginReader.ReadLine();
                 string password = loginReader.ReadLine();
                 string settings = loginReader.ReadLine();
 
-                this.UserPresence = new BanchoPresence() {
+                this.UserStats = new BanchoUserStats() {
                     UserId      = 24,
                     RankedScore = 123123,
                     TotalScore  = 234324,
@@ -30,6 +31,18 @@ namespace RX7.Bancho {
                         PlayMode        = 0,
                         UserStatus      = 1
                     }
+                };
+
+                this.UserPresence = new BanchoPresence() {
+                    Username          = username,
+                    AvatarExtension   = 0,
+                    FuckingBasedValue = 123,
+                    Latitude          = 0.5f,
+                    Longnitude        = 12f,
+                    Location          = "kurwa",
+                    Permissions       = 1,
+                    Timezone          = 24,
+                    UserId            = 24
                 };
             }
 
