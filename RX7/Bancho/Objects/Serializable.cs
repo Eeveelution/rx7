@@ -107,9 +107,8 @@ namespace RX7.Bancho.Objects {
                         writer.Write(doubleValue);
                         break;
                     default:
-                        Serializable serializable = (Serializable)Activator.CreateInstance(propertyInfo.PropertyType);
-                        serializable?.ReadFromStream(stream);
-                        propertyInfo.SetValue(this, serializable);
+                        Serializable serializable = (Serializable) propertyInfo.GetValue(this);
+                        serializable?.WriteToStream(stream);
                         break;
                 }
             }

@@ -25,5 +25,12 @@ byte[] written = stream.ToArray();
 BanchoUserStats status = new();
 status.ReadFromStream(new MemoryStream(written));
 
+MemoryStream testStream = new MemoryStream();
+status.WriteToStream(testStream);
+byte[] testWritten = testStream.ToArray();
+
+BanchoUserStats teststatus = new();
+teststatus.ReadFromStream(new MemoryStream(testWritten));
+
 Bancho.InitializeBancho("127.0.0.1", 13382);
 Bancho.Start();
