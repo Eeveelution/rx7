@@ -8,8 +8,8 @@ using EeveeTools.Servers.TCP;
 
 namespace _13B_REW.Bancho {
     public class ClientOsu : TcpClientHandler {
-        public BanchoUserStats UserStats    = null;
-        public BanchoPresence  UserPresence = null;
+        public UserStats    UserStats    = null;
+        public UserPresence UserPresence = null;
         protected override void HandleData(byte[] data) {
             Console.WriteLine("got data");
 
@@ -34,14 +34,15 @@ namespace _13B_REW.Bancho {
                 string[] networkDeviceAdresses = splitNetworkData[1].Split(".");
                 string networkDevicesHashed = splitNetworkData[2];
 
-                this.UserStats = new BanchoUserStats() {
+
+                this.UserStats = new UserStats() {
                     UserId      = 24,
                     RankedScore = 123123,
                     TotalScore  = 234324,
                     Accuracy    = 0.99999f,
                     Playcount   = 918273,
                     Rank        = 12,
-                    Status = new Status() {
+                    StatusUpdate = new StatusUpdate() {
                         Action          = "Litearlly nothing",
                         BeatmapChecksum = "nothing...",
                         BeatmapId       = 123213213,
@@ -51,7 +52,7 @@ namespace _13B_REW.Bancho {
                     }
                 };
 
-                this.UserPresence = new BanchoPresence() {
+                this.UserPresence = new UserPresence() {
                     Username          = username,
                     AvatarExtension   = 0,
                     FuckingBasedValue = 123,
@@ -81,46 +82,5 @@ namespace _13B_REW.Bancho {
 
             switch (packetId) {}
         }
-
-        #region Packets
-
-        private void LoginResult(int userId) {
-            Packet<BanchoLoginResponse> loginPacket = new() {
-                PacketId   = 5,
-                Compressed = false,
-                PacketData = new BanchoLoginResponse() {
-                    UserId = userId
-                }
-            };
-
-            this.SendData(loginPacket.ToBytes());
-        }
-        private void InformPresence(BanchoPresence presence) {
-            Packet<BanchoPresence> presencePacket = new() {
-                PacketId   = 83,
-                Compressed = false,
-                PacketData = presence
-
-            };
-
-            this.SendData(presencePacket.ToBytes());
-        }
-
-        private void InformStats(BanchoUserStats userStats) {
-            Packet<BanchoUserStats> presencePacket = new() {
-                PacketId   = 11,
-                Compressed = false,
-                PacketData = userStats
-
-            };
-
-            this.SendData(presencePacket.ToBytes());
-        }
-
-        private void SendOwnStats() => this.InformStats(this.UserStats);
-        private void SendOwnPresence() => this.InformPresence(this.UserPresence);
-
-        #endregion
-
     }
 }
