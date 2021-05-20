@@ -17,7 +17,14 @@ namespace _13B_REW.Bancho.Packets.Objects {
             using BanchoReader reader = new(stream);
 
             foreach (PropertyInfo propertyInfo in properties) {
-                switch (propertyInfo.PropertyType.Name) {
+
+                string propType = propertyInfo.PropertyType.Name;
+
+                if (propertyInfo.PropertyType.IsEnum) {
+                    propType = propertyInfo.PropertyType.GetEnumUnderlyingType().Name;
+                }
+
+                switch (propType) {
                     case "Byte":
                         propertyInfo.SetValue(this, reader.ReadByte());
                         break;
@@ -65,7 +72,14 @@ namespace _13B_REW.Bancho.Packets.Objects {
             using BanchoWriter writer = new(stream);
 
             foreach (PropertyInfo propertyInfo in properties) {
-                switch (propertyInfo.PropertyType.Name) {
+                string propType = propertyInfo.PropertyType.Name;
+
+                if (propertyInfo.PropertyType.IsEnum) {
+                    propType = propertyInfo.PropertyType.GetEnumUnderlyingType().Name;
+                }
+
+                switch (propType) {
+
                     case "Byte":
                         byte byteValue = (byte)propertyInfo.GetValue(this);
                         writer.Write(byteValue);
@@ -106,6 +120,8 @@ namespace _13B_REW.Bancho.Packets.Objects {
                         double doubleValue = (double)propertyInfo.GetValue(this);
                         writer.Write(doubleValue);
                         break;
+
+
                     default:
                         Serializable serializable = (Serializable) propertyInfo.GetValue(this);
                         serializable?.WriteToStream(stream);
