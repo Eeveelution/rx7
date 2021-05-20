@@ -1,12 +1,12 @@
 using System;
 using System.IO;
+using _13B_REW.Bancho.Packets;
+using _13B_REW.Bancho.Packets.Objects;
+using _13B_REW.Bancho.Packets.Objects.Serializables;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
-using RX7.Bancho.Packets;
-using RX7.Bancho.Packets.Objects;
-using RX7.Bancho.Packets.Objects.Serializables;
 
-namespace RX7.Bancho {
+namespace _13B_REW.Bancho {
     public class ClientOsu : TcpClientHandler {
         public BanchoUserStats UserStats    = null;
         public BanchoPresence  UserPresence = null;
@@ -18,7 +18,21 @@ namespace RX7.Bancho {
 
                 string username = loginReader.ReadLine();
                 string password = loginReader.ReadLine();
-                string settings = loginReader.ReadLine();
+                string clientData = loginReader.ReadLine();
+
+                string[] splitData = clientData?.Split("|");
+
+
+                string version = splitData[0];
+                string timezone = splitData[1];
+                string showCityLocation = splitData[2];
+
+                string multiaccountPreventionData = splitData[3];
+
+                string[] splitNetworkData = multiaccountPreventionData.Split(":");
+                string commandLineArgumentsHashed = splitNetworkData[0];
+                string[] networkDeviceAdresses = splitNetworkData[1].Split(".");
+                string networkDevicesHashed = splitNetworkData[2];
 
                 this.UserStats = new BanchoUserStats() {
                     UserId      = 24,

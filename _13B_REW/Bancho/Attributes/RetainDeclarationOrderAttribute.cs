@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace RX7.Bancho.Attributes {
+namespace _13B_REW.Bancho.Attributes {
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class RetainDeclarationOrderAttribute : Attribute {
         public int Order;

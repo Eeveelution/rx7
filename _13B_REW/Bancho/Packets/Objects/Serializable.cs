@@ -2,10 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using _13B_REW.Bancho.Attributes;
 using EeveeTools.Helpers;
-using RX7.Bancho.Attributes;
 
-namespace RX7.Bancho.Packets.Objects {
+namespace _13B_REW.Bancho.Packets.Objects {
     public abstract class Serializable {
         public Serializable() { }
         public virtual void ReadFromStream(Stream stream) {

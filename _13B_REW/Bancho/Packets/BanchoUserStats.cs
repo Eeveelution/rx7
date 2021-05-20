@@ -1,9 +1,9 @@
 using System.IO;
-using RX7.Bancho.Attributes;
-using RX7.Bancho.Packets.Objects;
-using RX7.Bancho.Packets.Objects.Serializables;
+using _13B_REW.Bancho.Attributes;
+using _13B_REW.Bancho.Packets.Objects;
+using _13B_REW.Bancho.Packets.Objects.Serializables;
 
-namespace RX7.Bancho.Packets {
+namespace _13B_REW.Bancho.Packets {
     public class BanchoUserStats : Serializable {
         [RetainDeclarationOrder] public int UserId          { get; set; }
         [RetainDeclarationOrder] public Status Status { get; set; }

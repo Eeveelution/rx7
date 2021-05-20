@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EeveeTools\EeveeTools\EeveeTools.csproj" />
+      <ProjectReference Include="..\Dependencies\EeveeTools\EeveeTools\EeveeTools.csproj" />
     </ItemGroup>
 
 </Project>

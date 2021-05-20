@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using EeveeTools.Helpers;
 
-namespace RX7.Bancho.Packets.Objects {
+namespace _13B_REW.Bancho.Packets.Objects {
     public class Packet<pSerializable> : Serializable where pSerializable : Serializable {
         public ushort        PacketId;
         public bool          Compressed;

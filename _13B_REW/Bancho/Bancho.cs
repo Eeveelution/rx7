@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using EeveeTools.Servers.TCP;
 
-namespace RX7.Bancho {
+namespace _13B_REW.Bancho {
     public static class Bancho {
         private static TcpServer _tcpServer;
 

@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RX7", "RX7\RX7.csproj", "{D9F54D5C-48E6-4BFD-86F6-66B23337735C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_13B_REW", "_13B_REW\_13B_REW.csproj", "{D9F54D5C-48E6-4BFD-86F6-66B23337735C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{95889573-A1AB-4D2F-B24E-A3F943FD194B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EeveeTools", "EeveeTools\EeveeTools\EeveeTools.csproj", "{76FD3FB9-71C0-4A09-AF96-B6C33DC726C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EeveeTools", "Dependencies\EeveeTools\EeveeTools\EeveeTools.csproj", "{21816D98-F589-4EB1-A730-3C4DEF35391F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,12 +16,12 @@ Global
 		{D9F54D5C-48E6-4BFD-86F6-66B23337735C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9F54D5C-48E6-4BFD-86F6-66B23337735C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9F54D5C-48E6-4BFD-86F6-66B23337735C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76FD3FB9-71C0-4A09-AF96-B6C33DC726C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76FD3FB9-71C0-4A09-AF96-B6C33DC726C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76FD3FB9-71C0-4A09-AF96-B6C33DC726C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76FD3FB9-71C0-4A09-AF96-B6C33DC726C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21816D98-F589-4EB1-A730-3C4DEF35391F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21816D98-F589-4EB1-A730-3C4DEF35391F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21816D98-F589-4EB1-A730-3C4DEF35391F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21816D98-F589-4EB1-A730-3C4DEF35391F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{76FD3FB9-71C0-4A09-AF96-B6C33DC726C7} = {95889573-A1AB-4D2F-B24E-A3F943FD194B}
+		{21816D98-F589-4EB1-A730-3C4DEF35391F} = {95889573-A1AB-4D2F-B24E-A3F943FD194B}
 	EndGlobalSection
 EndGlobal
