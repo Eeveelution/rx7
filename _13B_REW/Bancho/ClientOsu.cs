@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using _13B_REW.Bancho.Objects;
 using _13B_REW.Bancho.Packets;
 using _13B_REW.Bancho.Packets.Enums;
 using _13B_REW.Bancho.Packets.Objects;
@@ -9,20 +10,45 @@ using EeveeTools.Servers.TCP;
 
 namespace _13B_REW.Bancho {
     public class ClientOsu : TcpClientHandler {
-        public UserStats    UserStats    = null;
-        public UserPresence UserPresence = null;
+        public UserStats         UserStats       = null;
+        public UserPresence      UserPresence    = null;
+        public ClientInformation UserInformation = null;
         protected override void HandleData(byte[] data) {
-            Console.WriteLine("got data");
-
-            if (this.UserStats == null || this.UserPresence == null) {
+            if (this.UserStats == null || this.UserPresence == null || this.UserInformation == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
 
                 string username = loginReader.ReadLine();
                 string password = loginReader.ReadLine();
                 string clientData = loginReader.ReadLine();
 
-                string[] splitData = clientData?.Split("|");
+                this.HandleLogin(username, password, clientData);
 
+                return;
+            }
+
+            using BanchoReader reader = new(new MemoryStream(data));
+
+            PacketType packetType = (PacketType)reader.ReadUInt16();
+            bool compressed = reader.ReadBoolean();
+            int length = reader.ReadInt32();
+
+            byte[] fullPacketBytes = reader.ReadBytes(length);
+
+            using BanchoReader packetReader = new(new MemoryStream(fullPacketBytes));
+
+            Console.WriteLine($"got packet {packetType.ToString()}");
+
+            switch (packetType) {
+                case PacketType.OsuRequestStatusUpdate:
+                    this.SendOwnPresence();
+                    this.SendOwnStats();
+                    break;
+            }
+        }
+
+        private void HandleLogin(string username, string password, string clientData) {
+            try {
+                string[] splitData = clientData?.Split("|");
 
                 string version = splitData[0];
                 string timezone = splitData[1];
@@ -31,58 +57,24 @@ namespace _13B_REW.Bancho {
                 string multiaccountPreventionData = splitData[3];
 
                 string[] splitNetworkData = multiaccountPreventionData.Split(":");
-                string commandLineArgumentsHashed = splitNetworkData[0];
-                string[] networkDeviceAdresses = splitNetworkData[1].Split(".");
-                string networkDevicesHashed = splitNetworkData[2];
 
+                this.UserInformation = new ClientInformation() {
+                    ClientVersion         = version,
+                    Timezone              = int.Parse(timezone),
+                    CityLocationDisplayed = showCityLocation == "1",
 
-                this.UserStats = new UserStats() {
-                    UserId      = 24,
-                    RankedScore = 123123,
-                    TotalScore  = 234324,
-                    Accuracy    = 0.99999f,
-                    Playcount   = 918273,
-                    Rank        = 12,
-                    StatusUpdate = new StatusUpdate() {
-                        Action          = "Litearlly nothing",
-                        BeatmapChecksum = "nothing...",
-                        BeatmapId       = 123213213,
-                        EnabledMods     = 0,
-                        PlayMode        = 0,
-                        UserStatus      = Status.Submitting
-                    }
+                    HashedCommandLineArgs         = splitNetworkData[0],
+                    PhysicalNetworkAdresses       = splitNetworkData[1].Split("."),
+                    PhysicalNetworkAdressesHashed = splitNetworkData[2]
                 };
-
-                this.UserPresence = new UserPresence() {
-                    Username          = username,
-                    AvatarExtension   = 0,
-                    FuckingBasedValue = 123,
-                    Latitude          = 0.5f,
-                    Longnitude        = 12f,
-                    Location          = "kurwa",
-                    Permissions       = 1,
-                    Timezone          = 24,
-                    UserId            = 24,
-                    AnotherBasedValue = 0,
-                };
-
-                this.LoginResult(24);
-                this.SendOwnPresence();
-                this.SendOwnStats();
-                this.SendJoinSuccess("#osu");
             }
+            catch {
+                this.LoginResult(LoginResult.ServersideError);
+            }
+        }
 
-            using BanchoReader reader = new(new MemoryStream(data));
+        private void HandlePacketData(Stream readStream) {
 
-            ushort packetId = reader.ReadUInt16();
-            bool compressed = reader.ReadBoolean();
-            int length = reader.ReadInt32();
-
-            byte[] fullPacketBytes = reader.ReadBytes(length);
-
-            using BanchoReader packetReader = new(new MemoryStream(fullPacketBytes));
-
-            switch (packetId) {}
         }
     }
 }
