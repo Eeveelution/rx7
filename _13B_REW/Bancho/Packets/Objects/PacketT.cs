@@ -25,4 +25,6 @@ namespace _13B_REW.Bancho.Packets.Objects {
             writer.Write(packetData);
         }
     }
+
+    public class Packet : Packet<Serializable> { }
 }

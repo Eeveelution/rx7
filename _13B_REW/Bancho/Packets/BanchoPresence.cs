@@ -6,6 +6,7 @@ using _13B_REW.Bancho.Packets.Objects.Serializables;
 namespace _13B_REW.Bancho.Packets {
     public class BanchoPresence : Serializable {
         [RetainDeclarationOrder] public UserPresence Presence { get; set; }
+
         public static implicit operator UserPresence(BanchoPresence presence) => presence.Presence;
         public static implicit operator BanchoPresence(UserPresence presence) => new() { Presence = presence };
     }

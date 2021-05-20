@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using _13B_REW.Bancho.Packets;
 using _13B_REW.Bancho.Packets.Enums;
+using _13B_REW.Bancho.Packets.Objects;
 using _13B_REW.Bancho.Packets.Objects.Serializables;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
@@ -48,7 +49,7 @@ namespace _13B_REW.Bancho {
                         BeatmapId       = 123213213,
                         EnabledMods     = 0,
                         PlayMode        = 0,
-                        UserStatus      = Status.Idle
+                        UserStatus      = Status.Submitting
                     }
                 };
 
@@ -68,6 +69,7 @@ namespace _13B_REW.Bancho {
                 this.LoginResult(24);
                 this.SendOwnPresence();
                 this.SendOwnStats();
+                this.SendJoinSuccess("#osu");
             }
 
             using BanchoReader reader = new(new MemoryStream(data));
