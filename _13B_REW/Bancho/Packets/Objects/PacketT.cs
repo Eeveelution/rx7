@@ -22,7 +22,8 @@ namespace _13B_REW.Bancho.Packets.Objects {
 
             writer.Write(packetData.Length);
 
-            writer.Write(packetData);
+            if(packetData.Length != 0)
+                writer.Write(packetData);
         }
     }
 
