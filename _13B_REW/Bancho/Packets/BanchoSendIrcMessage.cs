@@ -20,7 +20,7 @@ namespace _13B_REW.Bancho.Packets {
                 PacketData = message
             };
 
-            clientOsu.SendData(message.ToBytes());
+            clientOsu.SendData(messagePacket.ToBytes());
         }
     }
 }

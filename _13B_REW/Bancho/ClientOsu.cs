@@ -106,6 +106,7 @@ namespace _13B_REW.Bancho {
 
                 this.LoginResult(24);
                 this.SendJoinSuccess("#osu");
+                this.SendMessage(new Message() {Sender = "Mazda", Target = "#osu", Text = "Hello there"});
             }
             catch {
                 this.LoginResult(LoginResult.ServersideError);
