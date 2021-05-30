@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using _13B_REW.Bancho.Database;
 using _13B_REW.Bancho.Managers;
 using _13B_REW.Bancho.Managers.Objects;
 using _13B_REW.Bancho.Objects;
@@ -14,6 +15,8 @@ using MySqlConnector;
 
 namespace _13B_REW.Bancho {
     public class ClientOsu : TcpClientHandler {
+        public DatabaseUser DatabaseUser = null;
+
         public UserStats         UserStats       = null;
         public UserPresence      UserPresence    = null;
         public ClientInformation UserInformation = null;
@@ -24,7 +27,7 @@ namespace _13B_REW.Bancho {
         private readonly object          _spectatorLock   = new();
         public           ClientOsu       SpectatingClient = null;
         protected override void HandleData(byte[] data) {
-            if (this.UserStats == null || this.UserPresence == null || this.UserInformation == null) {
+            if (this.UserStats == null || this.UserPresence == null || this.UserInformation == null || DatabaseUser == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
 
                 string username = loginReader.ReadLine();
@@ -40,6 +43,11 @@ namespace _13B_REW.Bancho {
         private void HandleLogin(string username, string password, string clientData) {
             try {
                 string[] splitData = clientData?.Split("|");
+
+                if (splitData == null) {
+                    this.LoginResult(LoginResult.OutdatedClient);
+                    return;
+                }
 
                 string version = splitData[0];
                 string timezone = splitData[1];
@@ -60,9 +68,7 @@ namespace _13B_REW.Bancho {
                     PhysicalNetworkAdressesHashed = splitNetworkData[2]
                 };
 
-                //TODO: db
-
-                string userFetchSql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY StandardRankedScore DESC) AS 'StandardRank', ROW_NUMBER() OVER (ORDER BY TaikoRankedScore DESC) AS 'TaikoRank', ROW_NUMBER() OVER (ORDER BY CatchRankedScore DESC) AS 'CatchRank' FROM users) t WHERE Username=@username";
+                const string userFetchSql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY StandardRankedScore DESC) AS 'StandardRank', ROW_NUMBER() OVER (ORDER BY TaikoRankedScore DESC) AS 'TaikoRank', ROW_NUMBER() OVER (ORDER BY CatchRankedScore DESC) AS 'CatchRank' FROM users) t WHERE Username=@username";
 
                 MySqlParameter[] userFetchParams = new[] {
                     new MySqlParameter("@username", username)
@@ -75,48 +81,13 @@ namespace _13B_REW.Bancho {
                     return;
                 }
 
-                IReadOnlyDictionary<string, object> userResult = userFetchResults[0];
-
-                if (userResult["Password"] != password) {
-                    this.LoginResult(LoginResult.WrongLogin);
-                    return;
-                }
+                this.DatabaseUser = new DatabaseUser();
+                this.DatabaseUser.MapObject(userFetchResults[0]);
 
                 this.UserStats = new UserStats() {
-                    UserId      = 24,
-                    RankedScore = 12123,
-                    TotalScore  = 12397,
-                    Accuracy    = 0.9123f,
-                    Playcount   = 123,
-                    Rank        = 1,
-                    StatusUpdate = new StatusUpdate() {
-                        Action          = "chilling",
-                        BeatmapChecksum = "none",
-                        BeatmapId       = 123,
-                        EnabledMods     = 1231,
-                        PlayMode        = 2,
-                        UserStatus      = Status.Lobby
-                    }
-                };
-
-                this.UserPresence = new UserPresence() {
-                    AvatarExtension   = 1,
-                    AnotherBasedValue = 2,
-                    FuckingBasedValue = 21,
-                    Latitude          = 12.42f,
-                    Location          = "eevees home",
-                    Longnitude        = 123f,
-                    Permissions       = 3,
-                    Timezone          = 3,
-                    UserId            = 24,
-                    Username          = "Eevee"
-                };
-
-                this.LoginResult(24);
-
-                this.SendJoinSuccess("#osu");
-
-                this.SendMessage(new Message() {Sender = "Mazda", Target = "#osu", Text = "Hello there"});
+                    UserId = this.DatabaseUser.UserId,
+                    
+                }
             }
             catch(Exception e) {
                 this.LoginResult(LoginResult.ServersideError);
