@@ -12,7 +12,7 @@ namespace _13B_REW.Bancho.Packets {
     }
 
     public static partial class ClientOsuPackets {
-        public static void SendSpectatorLeft(this ClientOsu clientOsu, BanchoSpectatorLeft spectatorLeft) {
+        public static void SpectatorLeft(this ClientOsu clientOsu, BanchoSpectatorLeft spectatorLeft) {
             Packet<BanchoSpectatorLeft> annoucementPacket = new() {
                 PacketId = PacketType.BanchoSpectatorLeft,
                 Compressed = false,
@@ -22,7 +22,7 @@ namespace _13B_REW.Bancho.Packets {
             clientOsu.SendData(annoucementPacket.ToBytes());
         }
 
-        public static void SendSpectatorLeft(this ClientOsu clientOsu, int spectatorId) {
+        public static void SpectatorLeft(this ClientOsu clientOsu, int spectatorId) {
             Packet<BanchoSpectatorLeft> annoucementPacket = new() {
                 PacketId   = PacketType.BanchoSpectatorLeft,
                 Compressed = false,
@@ -32,7 +32,7 @@ namespace _13B_REW.Bancho.Packets {
             clientOsu.SendData(annoucementPacket.ToBytes());
         }
 
-        public static void SendSpectatorLeft(this ClientOsu clientOsu, ClientOsu spectator) {
+        public static void SpectatorLeft(this ClientOsu clientOsu, ClientOsu spectator) {
             Packet<BanchoSpectatorLeft> annoucementPacket = new() {
                 PacketId   = PacketType.BanchoSpectatorLeft,
                 Compressed = false,

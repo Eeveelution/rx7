@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using _13B_REW.Bancho.Managers;
 using _13B_REW.Bancho.Managers.Objects;
 using _13B_REW.Bancho.Objects;
 using _13B_REW.Bancho.Packets;
@@ -16,6 +17,10 @@ namespace _13B_REW.Bancho {
         public ClientInformation UserInformation = null;
 
         public readonly List<Channel> JoinedChannels = new();
+
+        public readonly  List<ClientOsu> Spectators       = new();
+        private readonly object          _spectatorLock   = new();
+        public           ClientOsu       SpectatingClient = null;
         protected override void HandleData(byte[] data) {
             if (this.UserStats == null || this.UserPresence == null || this.UserInformation == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
@@ -87,7 +92,7 @@ namespace _13B_REW.Bancho {
 
                 this.LoginResult(24);
 
-                //ChannelManager.
+                this.SendJoinSuccess("#osu");
 
                 this.SendMessage(new Message() {Sender = "Mazda", Target = "#osu", Text = "Hello there"});
             }
@@ -111,15 +116,70 @@ namespace _13B_REW.Bancho {
             Console.WriteLine($"got packet {packetType.ToString()}");
 
             switch (packetType) {
-                case PacketType.OsuRequestStatusUpdate:
+                case PacketType.OsuStatusUpdate: {
+                    StatusUpdate update = new(packetStream);
+
+                    this.UserStats.StatusUpdate = update;
+
+                    this.SendOwnStats();
+                    break;
+                }
+                case PacketType.OsuRequestStatusUpdate: {
                     this.SendOwnPresence();
                     this.SendOwnStats();
                     break;
-                case PacketType.OsuSendIrcMessage:
+                }
+                case PacketType.OsuSendIrcMessage: {
                     Message message = new(packetStream);
                     message.GetChannel().SendMessage(this, message);
                     break;
+                }
+                case PacketType.OsuSpectateFrames: {
+                    ReplayFrameBundle bundle = new(packetStream);
+
+                    foreach (ClientOsu spectator in this.Spectators) {
+                        spectator.SendSpectatorFrameBundle(bundle);
+                    }
+
+                    break;
+                }
+                case PacketType.OsuStartSpectating: {
+                    Int userId = new(packetStream);
+
+                    ClientOsu foundClient = ClientManager.ClientsByUserId.GetValueOrDefault(userId, null);
+
+                    if (foundClient != null) {
+                        this.SpectatingClient = foundClient;
+                        this.SpectatingClient.StartSpectating(this);
+                    }
+
+                    break;
+                }
+
+                case PacketType.OsuStopSpectating: {
+                    this.SpectatingClient?.StopSpectating(this);
+                    this.SpectatingClient = null;
+
+                    break;
+                }
+
             }
         }
+
+        #region Spectator
+
+        public void StartSpectating(ClientOsu clientOsu) {
+            this.SendSpectatorJoined(clientOsu);
+
+            this.Spectators.Add(clientOsu);
+        }
+
+        public void StopSpectating(ClientOsu clientOsu) {
+            this.SpectatorLeft(clientOsu);
+
+            this.Spectators.Remove(clientOsu);
+        }
+
+        #endregion
     }
 }

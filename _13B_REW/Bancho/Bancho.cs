@@ -1,29 +1,21 @@
 using System.Collections.Concurrent;
 using _13B_REW.Bancho.Managers;
+using _13B_REW.Bancho.SchedulerJobs;
 using EeveeTools.Servers.TCP;
+using EeveeTools.Utilities.PollingJobScheduler;
 
 namespace _13B_REW.Bancho {
     public static class Bancho {
-        private static TcpServer _tcpServer;
-
-        public static ConcurrentDictionary<string, ClientOsu> ClientsByUsername;
-        public static ConcurrentDictionary<int, ClientOsu>    ClientsByUserId;
+        private static TcpServer             _tcpServer;
+        private static AsyncPollingScheduler _scheduler = new();
 
         public static void InitializeBancho(string location, short port) {
             _tcpServer = new TcpServer(location, port, typeof(ClientOsu));
 
             ChannelManager.InitializeChannels();
-        }
 
-        public static void RegisterClient(ClientOsu clientOsu) {
-            string username = clientOsu.UserPresence.Username;
-            int userId = clientOsu.UserPresence.UserId;
-
-            if (!ClientsByUsername.ContainsKey(username))
-                ClientsByUsername.AddOrUpdate(username, clientOsu, null!);
-
-            if (!ClientsByUserId.ContainsKey(userId))
-                ClientsByUserId.AddOrUpdate(userId, clientOsu, null!);
+            _scheduler.AddJob(new BanchoPinger());
+            _scheduler.RunScheduler();
         }
 
         public static void Start() {
