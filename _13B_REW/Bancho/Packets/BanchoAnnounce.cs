@@ -11,7 +11,7 @@ namespace _13B_REW.Bancho.Packets {
         public static implicit operator BanchoAnnounce(string announcement) => new() { Announcement = announcement };
     }
 
-    public partial class ClientOsuPackets {
+    public static partial class ClientOsuPackets {
         public static void SendAnnouncement(this ClientOsu clientOsu, BanchoAnnounce announce) {
             Packet<BanchoAnnounce> annoucementPacket = new() {
                 PacketId = PacketType.BanchoAnnounce,

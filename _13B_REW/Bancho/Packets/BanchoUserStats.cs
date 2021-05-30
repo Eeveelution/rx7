@@ -11,7 +11,7 @@ namespace _13B_REW.Bancho.Packets {
         public static implicit operator BanchoUserStats(UserStats stats) => new() { Stats = stats };
     }
 
-    public partial class ClientOsuPackets {
+    public static partial class ClientOsuPackets {
         public static void SendStats(this ClientOsu clientOsu, BanchoUserStats stats) {
             Packet<BanchoUserStats> statsPacket = new() {
                 PacketId   = PacketType.BanchoUserUpdate,

@@ -11,7 +11,7 @@ namespace _13B_REW.Bancho.Packets {
         public static implicit operator BanchoLobbyPart(int userId) => new() { User = userId };
     }
 
-    public partial class ClientOsuPackets {
+    public static partial class ClientOsuPackets {
         public static void InformLobbyPart(this ClientOsu clientOsu, BanchoLobbyPart lobbyPart) {
             Packet<BanchoLobbyPart> annoucementPacket = new() {
                 PacketId   = PacketType.BanchoLobbyPart,

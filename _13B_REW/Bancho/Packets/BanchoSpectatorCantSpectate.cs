@@ -11,7 +11,7 @@ namespace _13B_REW.Bancho.Packets {
         public static implicit operator BanchoSpectatorCantSpectate(int userId) => new() { Spectator = userId };
     }
 
-    public partial class ClientOsuPackets {
+    public static partial class ClientOsuPackets {
         public static void SendSpectatorCantSpectate(this ClientOsu clientOsu, BanchoSpectatorCantSpectate cantSpectate) {
             Packet<BanchoSpectatorCantSpectate> annoucementPacket = new() {
                 PacketId   = PacketType.BanchoSpectatorCantSpectate,

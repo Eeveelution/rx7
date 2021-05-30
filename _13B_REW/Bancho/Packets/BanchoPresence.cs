@@ -11,7 +11,7 @@ namespace _13B_REW.Bancho.Packets {
         public static implicit operator BanchoPresence(UserPresence presence) => new() { Presence = presence };
     }
 
-    public partial class ClientOsuPackets {
+    public static partial class ClientOsuPackets {
         public static void SendUserPresence(this ClientOsu clientOsu, BanchoPresence presence) {
             Packet<BanchoPresence> presencePacket = new() {
                 PacketId   = PacketType.BanchoUserPresence,

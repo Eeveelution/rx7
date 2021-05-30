@@ -11,7 +11,7 @@ namespace _13B_REW.Bancho.Packets {
         public static implicit operator BanchoSpectatorJoined(int userId) => new() { Spectator = userId };
     }
 
-    public partial class ClientOsuPackets {
+    public static partial class ClientOsuPackets {
         public static void SendSpectatorJoined(this ClientOsu clientOsu, BanchoSpectatorJoined spectatorJoined) {
             Packet<BanchoSpectatorJoined> annoucementPacket = new() {
                 PacketId = PacketType.BanchoSpectatorJoined,

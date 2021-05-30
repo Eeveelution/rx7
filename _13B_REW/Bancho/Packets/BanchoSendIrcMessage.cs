@@ -12,7 +12,7 @@ namespace _13B_REW.Bancho.Packets {
 
     }
 
-    public partial class ClientOsuPackets {
+    public static partial class ClientOsuPackets {
         public static void SendMessage(this ClientOsu clientOsu, BanchoSendIrcMessage message) {
             Packet<BanchoSendIrcMessage> messagePacket = new() {
                 PacketId   = PacketType.BanchoSendIrcMessage,
