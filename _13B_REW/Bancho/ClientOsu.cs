@@ -84,7 +84,7 @@ namespace _13B_REW.Bancho {
                 this.DatabaseUser = new DatabaseUser();
                 this.DatabaseUser.MapObject(userFetchResults[0]);
 
-                this.UserStats = new UserStats() {
+                this.UserStats = new UserStats {
                     UserId      =         this.DatabaseUser.UserId,
                     Rank        =         this.DatabaseUser.StandardRank,
                     Accuracy    = (float) this.DatabaseUser.StandardAccuracy / 100f,
@@ -98,6 +98,23 @@ namespace _13B_REW.Bancho {
                         PlayMode        = PlayModes.Osu,
                         UserStatus      = Status.Idle
                     }
+                };
+
+                this.UserPresence = new UserPresence {
+                    UserId          = this.DatabaseUser.UserId,
+                    Username        = this.DatabaseUser.Username,
+                    Rank            = this.DatabaseUser.StandardRank,
+                    //TODO: avatar extension enum
+                    AvatarExtension = 1,
+                    //TODO: country list enum
+                    Country         = 0,
+                    //TODO: long and lat gathering
+                    Latitude        = 0,
+                    Longnitude      = 0,
+                    Location        = this.DatabaseUser.Location,
+                    //TODO: permissions
+                    Permissions     = 0,
+                    Timezone        = byte.Parse(timezone)
                 };
             }
             catch(Exception e) {

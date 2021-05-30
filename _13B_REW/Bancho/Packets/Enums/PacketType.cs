@@ -29,7 +29,7 @@ namespace _13B_REW.Bancho.Packets.Enums {
         BanchoSpectatorJoined       = 13,
         BanchoSpectatorLeft         = 14,
         BanchoSpectateFrames        = 15,
-        BanchoClientUpdate          = 16,
+        BanchoClientUpdate          = 19,
         BanchoSpectatorCantSpectate = 22,
         BanchoAnnounce              = 24,
         BanchoLobbyJoin             = 29,
