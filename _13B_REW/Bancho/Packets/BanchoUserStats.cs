@@ -12,7 +12,7 @@ namespace _13B_REW.Bancho.Packets {
     }
 
     public static partial class ClientOsuPackets {
-        public static void SendStats(this ClientOsu clientOsu, BanchoUserStats stats) {
+        public static void UserStats(this ClientOsu clientOsu, BanchoUserStats stats) {
             Packet<BanchoUserStats> statsPacket = new() {
                 PacketId   = PacketType.BanchoUserUpdate,
                 Compressed = false,
@@ -22,7 +22,7 @@ namespace _13B_REW.Bancho.Packets {
             clientOsu.SendData(statsPacket.ToBytes());
         }
 
-        public static void SendOwnStats(this ClientOsu clientOsu) {
+        public static void OwnStats(this ClientOsu clientOsu) {
             Packet<BanchoUserStats> statsPacket = new() {
                 PacketId   = PacketType.BanchoUserUpdate,
                 Compressed = false,

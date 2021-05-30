@@ -111,8 +111,8 @@ namespace _13B_REW.Bancho.Database {
 
 
 
-        public int StandardRank { get; set; }
-        public int TaikoRank { get; set; }
-        public int CatchRank { get; set; }
+        public long StandardRank { get; set; }
+        public long TaikoRank { get; set; }
+        public long CatchRank { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace _13B_REW.Bancho.Packets {
     }
 
     public static partial class ClientOsuPackets {
-        public static void SendUserPresence(this ClientOsu clientOsu, BanchoPresence presence) {
+        public static void UserPresence(this ClientOsu clientOsu, BanchoPresence presence) {
             Packet<BanchoPresence> presencePacket = new() {
                 PacketId   = PacketType.BanchoUserPresence,
                 Compressed = false,
@@ -22,7 +22,7 @@ namespace _13B_REW.Bancho.Packets {
             clientOsu.SendData(presencePacket.ToBytes());
         }
 
-        public static void SendOwnPresence(this ClientOsu clientOsu) {
+        public static void OwnPresence(this ClientOsu clientOsu) {
             Packet<BanchoPresence> presencePacket = new() {
                 PacketId   = PacketType.BanchoUserPresence,
                 Compressed = false,

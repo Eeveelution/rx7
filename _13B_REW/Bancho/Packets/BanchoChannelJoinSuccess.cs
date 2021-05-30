@@ -10,7 +10,7 @@ namespace _13B_REW.Bancho.Packets {
     }
 
     public static partial class ClientOsuPackets {
-        public static void SendJoinSuccess(this ClientOsu clientOsu, string channelName) {
+        public static void ChannelJoinSuccess(this ClientOsu clientOsu, string channelName) {
             Packet<BanchoChannelJoinSuccess> channelJoinSuccessPacket = new() {
                 PacketId   = PacketType.BanchoChannelJoinSuccess,
                 Compressed = false,

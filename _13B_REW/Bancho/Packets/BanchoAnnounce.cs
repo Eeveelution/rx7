@@ -12,7 +12,7 @@ namespace _13B_REW.Bancho.Packets {
     }
 
     public static partial class ClientOsuPackets {
-        public static void SendAnnouncement(this ClientOsu clientOsu, BanchoAnnounce announce) {
+        public static void Announce(this ClientOsu clientOsu, BanchoAnnounce announce) {
             Packet<BanchoAnnounce> annoucementPacket = new() {
                 PacketId = PacketType.BanchoAnnounce,
                 Compressed = false,

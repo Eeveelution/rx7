@@ -56,16 +56,20 @@ namespace _13B_REW.Bancho.Managers.Objects {
 
             if (successResults == this.ChannelRules.Count) {
                 foreach (ClientOsu connectedClient in this._connectedClients) {
-                    connectedClient.SendMessage(message);
+                    connectedClient.IrcMessage(message);
                 }
             }
+        }
+
+        public virtual void Part(ClientOsu clientOsu) {
+            this._connectedClients.Remove(clientOsu);
         }
     }
 
     public static partial class ClientOsuPackets {
         public static void JoinChannel(this ClientOsu clientOsu, Channel channel) {
             if (channel.Join(clientOsu)) {
-                clientOsu.SendJoinSuccess(channel.GetName());
+                clientOsu.ChannelJoinSuccess(channel.GetName());
             }
         }
     }

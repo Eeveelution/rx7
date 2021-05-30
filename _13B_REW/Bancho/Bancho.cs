@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Concurrent;
 using _13B_REW.Bancho.Managers;
+using _13B_REW.Bancho.Packets;
+using _13B_REW.Bancho.Packets.Objects;
 using _13B_REW.Bancho.SchedulerJobs;
 using EeveeTools.Servers.TCP;
 using EeveeTools.Utilities.PollingJobScheduler;
@@ -16,6 +19,19 @@ namespace _13B_REW.Bancho {
 
             _scheduler.AddJob(new BanchoPinger());
             _scheduler.RunScheduler();
+        }
+
+        public static void BroadcastPacket(Action<ClientOsu> packetAction) {
+            foreach (ClientOsu clientOsu in ClientManager.ClientsByUserId.Values) {
+                packetAction(clientOsu);
+            }
+        }
+
+        public static void BroadcastPacketToOthers(Action<ClientOsu> packetAction, ClientOsu self) {
+            foreach (ClientOsu clientOsu in ClientManager.ClientsByUserId.Values) {
+                if(clientOsu != self)
+                    packetAction(clientOsu);
+            }
         }
 
         public static void Start() {

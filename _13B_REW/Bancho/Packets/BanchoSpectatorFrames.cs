@@ -16,7 +16,7 @@ namespace _13B_REW.Bancho.Packets {
     }
 
     public static partial class ClientOsuPackets {
-        public static void SendSpectatorFrameBundle(this ClientOsu clientOsu, BanchoSpectatorFrames bundle) {
+        public static void SpectateFrames(this ClientOsu clientOsu, BanchoSpectatorFrames bundle) {
             Packet<BanchoSpectatorFrames> frameBundlePacket = new() {
                 PacketId   = PacketType.BanchoSpectateFrames,
                 Compressed = false,

@@ -2,6 +2,11 @@ using System.IO;
 using EeveeTools.Helpers;
 
 namespace _13B_REW.Bancho.Packets.Objects.Serializables {
+    /// TODO:
+    ///
+    /// Vulnerabilities:
+    ///     sending Uint16.MaxValue FrameCount could potentially be used for Lagging the Server
+    ///
     public class ReplayFrameBundle : Serializable {
         public int           FrameCount;
         public ReplayFrame[] Frames;

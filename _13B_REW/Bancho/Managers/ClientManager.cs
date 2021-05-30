@@ -20,5 +20,13 @@ namespace _13B_REW.Bancho.Managers {
 
             ClientsByUserId.AddOrUpdate(userId, clientOsu, null!);
         }
+
+        public static void UnregisterClient(ClientOsu clientOsu) {
+            string username = clientOsu.UserPresence.Username;
+            int userId = clientOsu.UserPresence.UserId;
+
+            ClientsByUsername.Remove(username, out _);
+            ClientsByUserId.Remove(userId, out _);
+        }
     }
 }

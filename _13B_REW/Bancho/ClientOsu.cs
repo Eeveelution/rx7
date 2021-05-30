@@ -26,6 +26,9 @@ namespace _13B_REW.Bancho {
         public readonly  List<ClientOsu> Spectators       = new();
         private readonly object          _spectatorLock   = new();
         public           ClientOsu       SpectatingClient = null;
+
+        #region TcpClientHandler Overrides
+
         protected override void HandleData(byte[] data) {
             if (this.UserStats == null || this.UserPresence == null || this.UserInformation == null || DatabaseUser == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
@@ -39,6 +42,11 @@ namespace _13B_REW.Bancho {
                 this.HandlePacketData(new MemoryStream(data));
             }
         }
+        protected override void HandleDisconnect() {
+            this.Cleanup();
+        }
+
+        #endregion
 
         private void HandleLogin(string username, string password, string clientData) {
             try {
@@ -86,7 +94,7 @@ namespace _13B_REW.Bancho {
 
                 this.UserStats = new UserStats {
                     UserId      =         this.DatabaseUser.UserId,
-                    Rank        =         this.DatabaseUser.StandardRank,
+                    Rank        = (int)   this.DatabaseUser.StandardRank,
                     Accuracy    = (float) this.DatabaseUser.StandardAccuracy / 100f,
                     Playcount   =         this.DatabaseUser.StandardPlaycount,
                     RankedScore =         this.DatabaseUser.StandardRankedScore,
@@ -103,7 +111,7 @@ namespace _13B_REW.Bancho {
                 this.UserPresence = new UserPresence {
                     UserId          = this.DatabaseUser.UserId,
                     Username        = this.DatabaseUser.Username,
-                    Rank            = this.DatabaseUser.StandardRank,
+                    Rank            = (int) this.DatabaseUser.StandardRank,
                     //TODO: avatar extension enum
                     AvatarExtension = 1,
                     //TODO: country list enum
@@ -141,13 +149,14 @@ namespace _13B_REW.Bancho {
                     StatusUpdate update = new(packetStream);
 
                     this.UserStats.StatusUpdate = update;
+                    this.OwnStats();
 
-                    this.SendOwnStats();
+                    Bancho.BroadcastPacket(osu => osu.UserPresence(this.UserPresence));
                     break;
                 }
                 case PacketType.OsuRequestStatusUpdate: {
-                    this.SendOwnPresence();
-                    this.SendOwnStats();
+                    this.OwnPresence();
+                    this.OwnStats();
                     break;
                 }
                 case PacketType.OsuSendIrcMessage: {
@@ -159,7 +168,7 @@ namespace _13B_REW.Bancho {
                     ReplayFrameBundle bundle = new(packetStream);
 
                     foreach (ClientOsu spectator in this.Spectators) {
-                        spectator.SendSpectatorFrameBundle(bundle);
+                        spectator.SpectateFrames(bundle);
                     }
 
                     break;
@@ -202,5 +211,18 @@ namespace _13B_REW.Bancho {
         }
 
         #endregion
+
+        private void Cleanup() {
+            this.SpectatingClient?.StopSpectating(this);
+            this.SpectatingClient = null;
+
+            foreach (Channel joinedChannel in this.JoinedChannels) {
+                joinedChannel.Part(this);
+
+                this.JoinedChannels.Remove(joinedChannel);
+            }
+
+            ClientManager.UnregisterClient(this);
+        }
     }
 }
