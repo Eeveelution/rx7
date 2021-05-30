@@ -7,8 +7,10 @@ using _13B_REW.Bancho.Objects;
 using _13B_REW.Bancho.Packets;
 using _13B_REW.Bancho.Packets.Enums;
 using _13B_REW.Bancho.Packets.Objects.Serializables;
+using EeveeTools.Database;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
+using MySqlConnector;
 
 namespace _13B_REW.Bancho {
     public class ClientOsu : TcpClientHandler {
@@ -60,6 +62,26 @@ namespace _13B_REW.Bancho {
 
                 //TODO: db
 
+                string userFetchSql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY StandardRankedScore DESC) AS 'StandardRank', ROW_NUMBER() OVER (ORDER BY TaikoRankedScore DESC) AS 'TaikoRank', ROW_NUMBER() OVER (ORDER BY CatchRankedScore DESC) AS 'CatchRank' FROM users) t WHERE Username=@username";
+
+                MySqlParameter[] userFetchParams = new[] {
+                    new MySqlParameter("@username", username)
+                };
+
+                IReadOnlyDictionary<string, object>[] userFetchResults = DatabaseHandler.Query(GlobalVariables.DatabaseContext, userFetchSql, userFetchParams);
+
+                if (userFetchResults.Length == 0) {
+                    this.LoginResult(LoginResult.WrongLogin);
+                    return;
+                }
+
+                IReadOnlyDictionary<string, object> userResult = userFetchResults[0];
+
+                if (userResult["Password"] != password) {
+                    this.LoginResult(LoginResult.WrongLogin);
+                    return;
+                }
+
                 this.UserStats = new UserStats() {
                     UserId      = 24,
                     RankedScore = 12123,
@@ -96,7 +118,7 @@ namespace _13B_REW.Bancho {
 
                 this.SendMessage(new Message() {Sender = "Mazda", Target = "#osu", Text = "Hello there"});
             }
-            catch {
+            catch(Exception e) {
                 this.LoginResult(LoginResult.ServersideError);
             }
         }
