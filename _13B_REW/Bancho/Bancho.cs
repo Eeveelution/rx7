@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using _13B_REW.Bancho.Managers;
 using EeveeTools.Servers.TCP;
 
 namespace _13B_REW.Bancho {
@@ -10,6 +11,8 @@ namespace _13B_REW.Bancho {
 
         public static void InitializeBancho(string location, short port) {
             _tcpServer = new TcpServer(location, port, typeof(ClientOsu));
+
+            ChannelManager.InitializeChannels();
         }
 
         public static void RegisterClient(ClientOsu clientOsu) {

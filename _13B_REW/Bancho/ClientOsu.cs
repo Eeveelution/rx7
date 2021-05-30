@@ -107,7 +107,7 @@ namespace _13B_REW.Bancho {
 
                 this.LoginResult(24);
 
-                ChannelManager.
+                //ChannelManager.
 
                 this.SendMessage(new Message() {Sender = "Mazda", Target = "#osu", Text = "Hello there"});
             }

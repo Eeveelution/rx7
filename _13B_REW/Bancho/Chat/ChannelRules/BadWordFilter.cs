@@ -5,6 +5,7 @@ using _13B_REW.Bancho.Packets.Objects.Serializables;
 namespace _13B_REW.Bancho.Chat.ChannelRules {
     [ChannelSpecificRule("#osu")]
     public class BadWordFilter : ChannelRule {
+        //TODO: replace this with a dictionary stored on disk to prevent filling this repo with bad words
         private readonly Dictionary<string, string> _badwords = new() {
             { "cunt", "nice person" }
         };
