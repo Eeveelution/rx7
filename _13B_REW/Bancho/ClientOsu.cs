@@ -94,8 +94,8 @@ namespace _13B_REW.Bancho {
                         Action          = "User Just Logged in!",
                         BeatmapChecksum = "none",
                         BeatmapId       = -1,
-                        EnabledMods     = 0,
-                        PlayMode        = 0,
+                        Mods            = Mods.None,
+                        PlayMode        = PlayModes.Osu,
                         UserStatus      = Status.Idle
                     }
                 };
