@@ -1,9 +1,6 @@
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using _13B_REW.Bancho.Packets;
-using _13B_REW.Bancho.Packets.Objects;
 using _13B_REW.Bancho.Packets.Objects.Serializables;
 
 namespace _13B_REW.Bancho.Managers.Objects {

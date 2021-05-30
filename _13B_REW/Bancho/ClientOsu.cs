@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using _13B_REW.Bancho.Managers;
 using _13B_REW.Bancho.Managers.Objects;
 using _13B_REW.Bancho.Objects;
 using _13B_REW.Bancho.Packets;
 using _13B_REW.Bancho.Packets.Enums;
-using _13B_REW.Bancho.Packets.Objects;
 using _13B_REW.Bancho.Packets.Objects.Serializables;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
@@ -27,32 +25,8 @@ namespace _13B_REW.Bancho {
                 string clientData = loginReader.ReadLine();
 
                 this.HandleLogin(username, password, clientData);
-
-                return;
-            }
-
-            using BanchoReader reader = new(new MemoryStream(data));
-
-            PacketType packetType = (PacketType)reader.ReadUInt16();
-            bool compressed = reader.ReadBoolean();
-            int length = reader.ReadInt32();
-
-            byte[] fullPacketBytes = reader.ReadBytes(length);
-
-            using MemoryStream packetStream = new(fullPacketBytes);
-            using BanchoReader packetReader = new(packetStream);
-
-            Console.WriteLine($"got packet {packetType.ToString()}");
-
-            switch (packetType) {
-                case PacketType.OsuRequestStatusUpdate:
-                    this.SendOwnPresence();
-                    this.SendOwnStats();
-                    break;
-                case PacketType.OsuSendIrcMessage:
-                    Message message = new(packetStream);
-                    message.GetChannel().SendMessage(this, message);
-                    break;
+            } else {
+                this.HandlePacketData(new MemoryStream(data));
             }
         }
 
@@ -73,6 +47,7 @@ namespace _13B_REW.Bancho {
                     Timezone              = int.Parse(timezone),
                     CityLocationDisplayed = showCityLocation == "1",
 
+                    //Peppy legit stalking us through physical network adresses
                     HashedCommandLineArgs         = splitNetworkData[0],
                     PhysicalNetworkAdresses       = splitNetworkData[1].Split("."),
                     PhysicalNetworkAdressesHashed = splitNetworkData[2]
@@ -122,7 +97,29 @@ namespace _13B_REW.Bancho {
         }
 
         private void HandlePacketData(Stream readStream) {
+            using BanchoReader reader = new(readStream);
 
+            PacketType packetType = (PacketType)reader.ReadUInt16();
+            bool compressed = reader.ReadBoolean();
+            int length = reader.ReadInt32();
+
+            byte[] fullPacketBytes = reader.ReadBytes(length);
+
+            using MemoryStream packetStream = new(fullPacketBytes);
+            using BanchoReader packetReader = new(packetStream);
+
+            Console.WriteLine($"got packet {packetType.ToString()}");
+
+            switch (packetType) {
+                case PacketType.OsuRequestStatusUpdate:
+                    this.SendOwnPresence();
+                    this.SendOwnStats();
+                    break;
+                case PacketType.OsuSendIrcMessage:
+                    Message message = new(packetStream);
+                    message.GetChannel().SendMessage(this, message);
+                    break;
+            }
         }
     }
 }
