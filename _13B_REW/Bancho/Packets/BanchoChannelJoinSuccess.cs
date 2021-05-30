@@ -1,9 +1,10 @@
 using _13B_REW.Bancho.Attributes;
 using _13B_REW.Bancho.Packets.Enums;
+using _13B_REW.Bancho.Packets.Objects;
 
-namespace _13B_REW.Bancho.Packets.Objects {
+namespace _13B_REW.Bancho.Packets {
     public class BanchoChannelJoinSuccess : Serializable {
-        [RetainDeclarationOrderAttribute] public string ChannelName { get; set; }
+        [RetainDeclarationOrder] public string ChannelName { get; set; }
 
         public static implicit operator BanchoChannelJoinSuccess(string channelName) => new() { ChannelName = channelName };
     }

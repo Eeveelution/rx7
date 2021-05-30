@@ -1,24 +1,31 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
+using _13B_REW.Bancho.Packets;
 using _13B_REW.Bancho.Packets.Objects;
 
 namespace _13B_REW.Bancho.Managers.Objects {
     public abstract class Channel {
         private readonly List<ClientOsu> _connectedClients = new();
-        private readonly string          _name             = "";
 
-        private readonly bool            _priviledgedRead;
-        private readonly bool            _priviledgedWrite;
+        public abstract string _name { get; set; }
+        public abstract bool _priviledgedRead { get; set; }
+        public abstract bool _priviledgedWrite { get; set; }
 
-        public Channel(string name, bool priviledgedRead, bool priviledgedWrite) {
-            this._name             = name;
-            this._priviledgedRead  = priviledgedRead;
-            this._priviledgedWrite = priviledgedWrite;
+        public abstract List<ChannelRule> _channelRules { get; set; }
+
+        private readonly object _channelRuleLock = new();
+
+        public virtual void AddRule(ChannelRule rule) {
+            lock (this._channelRuleLock)
+                if (!this._channelRules.Contains(rule))
+                    this._channelRules.Add(rule);
+
         }
 
-        public string GetName() => this._name;
+        public virtual string GetName() => this._name;
 
-        public bool Join(ClientOsu clientOsu) {
+        public virtual bool Join(ClientOsu clientOsu) {
             if (this._connectedClients.Contains(clientOsu)) {
                 this._connectedClients.RemoveAll(client => client == clientOsu);
                 this._connectedClients.Add(clientOsu);
@@ -29,17 +36,17 @@ namespace _13B_REW.Bancho.Managers.Objects {
             return true;
         }
 
-        public bool TryJoin(ClientOsu clientOsu) {
+        public virtual bool TryJoin(ClientOsu clientOsu) {
             //TODO: privledges
             //if clientosu privledges lower than necessary then fuck off
-            
+
             if (this._connectedClients.Contains(clientOsu)) {
                 this._connectedClients.RemoveAll(client => client == clientOsu);
                 this._connectedClients.Add(clientOsu);
 
                 clientOsu.JoinChannel(this);
             }
-            
+
             return true;
         }
     }

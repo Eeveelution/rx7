@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using _13B_REW.Bancho.Managers;
 using _13B_REW.Bancho.Managers.Objects;
 using _13B_REW.Bancho.Objects;
 using _13B_REW.Bancho.Packets;
@@ -105,7 +106,9 @@ namespace _13B_REW.Bancho {
                 };
 
                 this.LoginResult(24);
-                this.SendJoinSuccess("#osu");
+
+                ChannelManager.
+
                 this.SendMessage(new Message() {Sender = "Mazda", Target = "#osu", Text = "Hello there"});
             }
             catch {
