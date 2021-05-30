@@ -5,7 +5,8 @@ using _13B_REW.Bancho.Packets.Objects;
 namespace _13B_REW.Bancho.Managers.Objects {
     public abstract class Channel {
         private readonly List<ClientOsu> _connectedClients = new();
-        private          string          _name             = "";
+        private readonly string          _name             = "";
+
         private readonly bool            _priviledgedRead;
         private readonly bool            _priviledgedWrite;
 
