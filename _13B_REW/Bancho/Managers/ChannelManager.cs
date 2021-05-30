@@ -8,7 +8,7 @@ using _13B_REW.Bancho.Managers.Objects;
 
 namespace _13B_REW.Bancho.Managers {
     public static class ChannelManager {
-        private static ConcurrentDictionary<string, Channel> _channels = new();
+        public static readonly ConcurrentDictionary<string, Channel> Channels = new();
 
         public static void InitializeChannels() {
             Dictionary<string, Channel> channels = new();
@@ -56,6 +56,10 @@ namespace _13B_REW.Bancho.Managers {
                 foreach (Channel channel in channels.Values) {
                     channel.AddRule(channelRule);
                 }
+            }
+
+            foreach ((string channelname, Channel channel) in channels) {
+                Channels.AddOrUpdate(channelname, channel, (_,_) => throw new ArgumentException("2 Channels of the Same Name Exist..."));
             }
         }
     }

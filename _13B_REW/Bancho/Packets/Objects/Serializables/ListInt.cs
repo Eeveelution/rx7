@@ -1,10 +1,16 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using EeveeTools.Helpers;
 
 namespace _13B_REW.Bancho.Packets.Objects.Serializables {
     public class ListInt : Serializable {
-        public List<int> List = new();
+        public ListInt() {}
+        public ListInt(Stream readStream) => this.ReadFromStream(readStream);
+        public ListInt(List<int> list) => this.List = list;
+        public ListInt(IEnumerable<int> list) => this.List = list.ToList();
+
+        private List<int> List = new();
 
         public override void ReadFromStream(Stream stream) {
             using BanchoReader reader = new(stream);

@@ -1,7 +1,10 @@
+using System.IO;
 using _13B_REW.Bancho.Attributes;
 
 namespace _13B_REW.Bancho.Packets.Objects.Serializables {
     public class UserPresence : Serializable {
+        public UserPresence() {}
+        public UserPresence(Stream readStream) => this.ReadFromStream(readStream);
         [RetainDeclarationOrder] public int UserId          { get; set; }
         [RetainDeclarationOrder] public string Username { get; set; }
         [RetainDeclarationOrder] public byte AvatarExtension { get; set; }

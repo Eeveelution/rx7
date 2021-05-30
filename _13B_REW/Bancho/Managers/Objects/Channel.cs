@@ -1,8 +1,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using _13B_REW.Bancho.Packets;
 using _13B_REW.Bancho.Packets.Objects;
+using _13B_REW.Bancho.Packets.Objects.Serializables;
 
 namespace _13B_REW.Bancho.Managers.Objects {
     public abstract class Channel {
@@ -50,6 +52,16 @@ namespace _13B_REW.Bancho.Managers.Objects {
             }
 
             return true;
+        }
+
+        public virtual void SendMessage(ClientOsu clientOsu, Message message) {
+            int successResults = this.ChannelRules.Select(channelRule => channelRule.RunRule(this, message)).Count(result => result == true);
+
+            if (successResults == this.ChannelRules.Count) {
+                foreach (ClientOsu connectedClient in this._connectedClients) {
+                    connectedClient.SendMessage(message);
+                }
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 namespace _13B_REW.Bancho.Packets.Enums {
     public enum PacketType {
         OsuStatusUpdate             = 0,
+        OsuSendIrcMessage           = 1,
         OsuQuit                     = 2,
         OsuRequestStatusUpdate      = 3,
         OsuPong                     = 4,

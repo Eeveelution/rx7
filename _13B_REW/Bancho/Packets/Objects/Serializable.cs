@@ -8,6 +8,7 @@ using EeveeTools.Helpers;
 namespace _13B_REW.Bancho.Packets.Objects {
     public abstract class Serializable {
         public Serializable() { }
+        public Serializable(Stream readStream) => this.ReadFromStream(readStream);
         public virtual void ReadFromStream(Stream stream) {
             IOrderedEnumerable<PropertyInfo> properties = from property in this.GetType().GetProperties()
                                                           where Attribute.IsDefined(property, typeof(RetainDeclarationOrderAttribute))

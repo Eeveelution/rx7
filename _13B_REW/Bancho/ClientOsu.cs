@@ -39,7 +39,8 @@ namespace _13B_REW.Bancho {
 
             byte[] fullPacketBytes = reader.ReadBytes(length);
 
-            using BanchoReader packetReader = new(new MemoryStream(fullPacketBytes));
+            using MemoryStream packetStream = new(fullPacketBytes);
+            using BanchoReader packetReader = new(packetStream);
 
             Console.WriteLine($"got packet {packetType.ToString()}");
 
@@ -47,6 +48,10 @@ namespace _13B_REW.Bancho {
                 case PacketType.OsuRequestStatusUpdate:
                     this.SendOwnPresence();
                     this.SendOwnStats();
+                    break;
+                case PacketType.OsuSendIrcMessage:
+                    Message message = new(packetStream);
+                    message.GetChannel().SendMessage(this, message);
                     break;
             }
         }
