@@ -85,9 +85,20 @@ namespace _13B_REW.Bancho {
                 this.DatabaseUser.MapObject(userFetchResults[0]);
 
                 this.UserStats = new UserStats() {
-                    UserId = this.DatabaseUser.UserId,
-                    
-                }
+                    UserId      =         this.DatabaseUser.UserId,
+                    Rank        =         this.DatabaseUser.StandardRank,
+                    Accuracy    = (float) this.DatabaseUser.StandardAccuracy / 100f,
+                    Playcount   =         this.DatabaseUser.StandardPlaycount,
+                    RankedScore =         this.DatabaseUser.StandardRankedScore,
+                    StatusUpdate = new StatusUpdate() {
+                        Action          = "User Just Logged in!",
+                        BeatmapChecksum = "none",
+                        BeatmapId       = -1,
+                        EnabledMods     = 0,
+                        PlayMode        = 0,
+                        UserStatus      = Status.Idle
+                    }
+                };
             }
             catch(Exception e) {
                 this.LoginResult(LoginResult.ServersideError);

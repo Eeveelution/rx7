@@ -40,6 +40,10 @@ namespace _13B_REW.Bancho.Database {
         public int TaikoPlaycount { get; set; }
         public int CatchPlaycount { get; set; }
 
+        public double StandardAccuracy { get; set; }
+        public double TaikoAccuracy { get; set; }
+        public double CatchAccuracy { get; set; }
+
 
 
         public int StandardCountSSH { get; set; }
@@ -104,5 +108,11 @@ namespace _13B_REW.Bancho.Database {
 
         public int ReplaysWatched { get; set; }
         public sbyte Priviledges { get; set; }
+
+
+
+        public int StandardRank { get; set; }
+        public int TaikoRank { get; set; }
+        public int CatchRank { get; set; }
     }
 }
