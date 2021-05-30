@@ -27,7 +27,7 @@ namespace _13B_REW.Bancho.Managers.Objects {
         public virtual string GetName() => this.ChannelName;
 
         public virtual bool Join(ClientOsu clientOsu) {
-            if (this._connectedClients.Contains(clientOsu)) {
+            if (!this._connectedClients.Contains(clientOsu)) {
                 this._connectedClients.RemoveAll(client => client == clientOsu);
                 this._connectedClients.Add(clientOsu);
 
@@ -41,7 +41,7 @@ namespace _13B_REW.Bancho.Managers.Objects {
             //TODO: privledges
             //if clientosu privledges lower than necessary then fuck off
 
-            if (this._connectedClients.Contains(clientOsu)) {
+            if (!this._connectedClients.Contains(clientOsu)) {
                 this._connectedClients.RemoveAll(client => client == clientOsu);
                 this._connectedClients.Add(clientOsu);
 

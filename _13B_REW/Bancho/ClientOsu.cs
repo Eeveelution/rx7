@@ -92,6 +92,11 @@ namespace _13B_REW.Bancho {
                 this.DatabaseUser = new DatabaseUser();
                 this.DatabaseUser.MapObject(userFetchResults[0]);
 
+                if (password != this.DatabaseUser.Password) {
+                    this.LoginResult(LoginResult.WrongLogin);
+                    return;
+                }
+
                 this.UserStats = new UserStats {
                     UserId      =         this.DatabaseUser.UserId,
                     Rank        = (int)   this.DatabaseUser.StandardRank,
@@ -124,6 +129,12 @@ namespace _13B_REW.Bancho {
                     Permissions     = 0,
                     Timezone        = byte.Parse(timezone)
                 };
+
+                this.LoginResult(this.DatabaseUser.UserId);
+                ChannelManager.Channels["#osu"]?.Join(this);
+
+                Bancho.BroadcastPacket(osu => osu.UserStats(this.UserStats));
+                Bancho.BroadcastPacket(osu => osu.UserPresence(this.UserPresence));
             }
             catch(Exception e) {
                 this.LoginResult(LoginResult.ServersideError);
@@ -223,6 +234,8 @@ namespace _13B_REW.Bancho {
             }
 
             ClientManager.UnregisterClient(this);
+
+            Bancho.BroadcastPacket(osu => osu.InformQuit(this.DatabaseUser.UserId));
         }
     }
 }

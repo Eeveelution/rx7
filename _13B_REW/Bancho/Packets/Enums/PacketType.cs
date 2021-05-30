@@ -26,6 +26,7 @@ namespace _13B_REW.Bancho.Packets.Enums {
         BanchoLoginReply            = 5,
         BanchoSendIrcMessage        = 7,
         BanchoPing                  = 8,
+        BanchoUserQuit              = 12,
         BanchoSpectatorJoined       = 13,
         BanchoSpectatorLeft         = 14,
         BanchoSpectateFrames        = 15,
