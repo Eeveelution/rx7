@@ -8,22 +8,24 @@ namespace _13B_REW.Bancho.Managers.Objects {
     public abstract class Channel {
         private readonly List<ClientOsu> _connectedClients = new();
 
-        public abstract string _name { get; set; }
-        public abstract bool _priviledgedRead { get; set; }
-        public abstract bool _priviledgedWrite { get; set; }
+        public abstract string ChannelName { get; set; }
+        public abstract bool PriviledgedRead { get; set; }
+        public abstract bool PriviledgedWrite { get; set; }
 
-        public abstract List<ChannelRule> _channelRules { get; set; }
+        protected abstract List<ChannelRule> ChannelRules { get; set; }
 
         private readonly object _channelRuleLock = new();
 
         public virtual void AddRule(ChannelRule rule) {
+            this.ChannelRules ??= new List<ChannelRule>();
+
             lock (this._channelRuleLock)
-                if (!this._channelRules.Contains(rule))
-                    this._channelRules.Add(rule);
+                if (!this.ChannelRules.Contains(rule))
+                    this.ChannelRules.Add(rule);
 
         }
 
-        public virtual string GetName() => this._name;
+        public virtual string GetName() => this.ChannelName;
 
         public virtual bool Join(ClientOsu clientOsu) {
             if (this._connectedClients.Contains(clientOsu)) {
