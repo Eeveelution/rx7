@@ -18,12 +18,16 @@ namespace _13B_REW.Bancho.Packets.Objects {
             writer.Write((short)this.PacketId);
             writer.Write(this.Compressed);
 
-            byte[] packetData = this.PacketData.ToBytes();
+            if (this.PacketData != null) {
+                byte[] packetData = this.PacketData.ToBytes();
 
-            writer.Write(packetData.Length);
+                writer.Write(packetData.Length);
 
-            if(packetData.Length != 0)
-                writer.Write(packetData);
+                if (packetData.Length != 0)
+                    writer.Write(packetData);
+            } else {
+                writer.Write(0);
+            }
         }
     }
 
