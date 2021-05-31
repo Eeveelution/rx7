@@ -7,6 +7,7 @@ using _13B_REW.Bancho.Managers.Objects;
 using _13B_REW.Bancho.Objects;
 using _13B_REW.Bancho.Packets;
 using _13B_REW.Bancho.Packets.Enums;
+using _13B_REW.Bancho.Packets.Objects;
 using _13B_REW.Bancho.Packets.Objects.Serializables;
 using EeveeTools.Database;
 using EeveeTools.Helpers;
@@ -118,10 +119,8 @@ namespace _13B_REW.Bancho {
                     UserId          = this.DatabaseUser.UserId,
                     Username        = this.DatabaseUser.Username,
                     Rank            = (int) this.DatabaseUser.StandardRank,
-                    //TODO: avatar extension enum
-                    AvatarExtension = 1,
-                    //TODO: country list enum
-                    Country         = 0,
+                    AvatarExtension = AvatarExtension.Png,
+                    Country         = (byte)CountryList.List.IndexOf("Unknown"),
                     //TODO: long and lat gathering
                     Latitude        = 0,
                     Longnitude      = 0,
