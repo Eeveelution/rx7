@@ -7,8 +7,8 @@ namespace _13B_REW.Bancho.Managers {
         public static ConcurrentDictionary<string, ClientOsu> ClientsByUsername = new();
 
         public static void RegisterClient(ClientOsu clientOsu) {
-            string username = clientOsu.UserPresence.Username;
-            int userId = clientOsu.UserPresence.UserId;
+            string username = clientOsu.Username;
+            int userId = clientOsu.UserId;
 
             if (ClientsByUsername.ContainsKey(username))
                 ClientsByUsername.Remove(username, out _);
@@ -22,8 +22,8 @@ namespace _13B_REW.Bancho.Managers {
         }
 
         public static void UnregisterClient(ClientOsu clientOsu) {
-            string username = clientOsu.UserPresence.Username;
-            int userId = clientOsu.UserPresence.UserId;
+            string username = clientOsu.Username;
+            int userId = clientOsu.UserId;
 
             ClientsByUsername.Remove(username, out _);
             ClientsByUserId.Remove(userId, out _);

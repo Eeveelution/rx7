@@ -29,6 +29,9 @@ namespace _13B_REW.Bancho {
         private readonly object          _spectatorLock   = new();
         public           ClientOsu       SpectatingClient = null;
 
+        public string Username => this.DatabaseUser.Username;
+        public int UserId => this.DatabaseUser.UserId;
+
         #region TcpClientHandler Overrides
 
         protected override void HandleData(byte[] data) {
@@ -135,6 +138,8 @@ namespace _13B_REW.Bancho {
 
                 Bancho.BroadcastPacket(osu => osu.UserStats(this.UserStats));
                 Bancho.BroadcastPacket(osu => osu.UserPresence(this.UserPresence));
+
+                this.RotaryBotMessageOsu("Welcome to RX7!");
             }
             catch(Exception e) {
                 this.LoginResult(LoginResult.ServersideError);

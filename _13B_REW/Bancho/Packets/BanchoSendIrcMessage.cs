@@ -22,5 +22,25 @@ namespace _13B_REW.Bancho.Packets {
 
             clientOsu.SendData(messagePacket.ToBytes());
         }
+
+        public static void RotaryBotMessageOsu(this ClientOsu clientOsu, string message) {
+            Packet<BanchoSendIrcMessage> messagePacket = new() {
+                PacketId   = PacketType.BanchoSendIrcMessage,
+                Compressed = false,
+                PacketData = new Message("RotaryBot", message, "#osu")
+            };
+
+            clientOsu.SendData(messagePacket.ToBytes());
+        }
+
+        public static void RotaryBotMessagePrivate(this ClientOsu clientOsu, string message) {
+            Packet<BanchoSendIrcMessage> messagePacket = new() {
+                PacketId   = PacketType.BanchoSendIrcMessage,
+                Compressed = false,
+                PacketData = new Message("RotaryBot", message, clientOsu.Username)
+            };
+
+            clientOsu.SendData(messagePacket.ToBytes());
+        }
     }
 }
