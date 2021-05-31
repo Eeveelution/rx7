@@ -4,7 +4,7 @@ using _13B_REW.Bancho.Packets.Objects.Serializables;
 
 namespace _13B_REW.Bancho.Packets {
     public static partial class ClientOsuPackets {
-        public static void SetFlags(this ClientOsu clientOsu) {
+        public static void SetMultiplayerFlags(this ClientOsu clientOsu) {
             Packet<Int> flagPacket = new() {
                 PacketId   = PacketType.BanchoMultiplayerFlagThing,
                 Compressed = false,

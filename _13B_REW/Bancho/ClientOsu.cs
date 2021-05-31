@@ -145,6 +145,8 @@ namespace _13B_REW.Bancho {
                 this.ChannelAvailable("#available");
                 this.ChannelAvailableAutojoin("#autojoin");
 
+                this.SetMultiplayerFlags();
+
                 Console.WriteLine($"[Bancho] Welcome {this.Username}!");
 
                 ClientManager.RegisterClient(this);

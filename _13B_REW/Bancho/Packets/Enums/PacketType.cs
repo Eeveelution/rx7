@@ -159,8 +159,17 @@ namespace _13B_REW.Bancho.Packets.Enums {
         /// Bancho is telling osu! it has succeeded in joining a channel
         /// </summary>
         BanchoChannelJoinSuccess = 64,
+        /// <summary>
+        /// Bancho is telling osu! that another chat channel is available to join
+        /// </summary>
         BanchoChannelAvailable         = 65,
+        /// <summary>
+        /// Bancho is telling osu! that a chat channel has been removed
+        /// </summary>
         BanchoChannelRevoked           = 66,
+        /// <summary>
+        /// Bancho is telling osu! that a chat channel is available to join and to join it automatically
+        /// </summary>
         BanchoChannelAvailableAutoJoin = 67,
     }
 }
