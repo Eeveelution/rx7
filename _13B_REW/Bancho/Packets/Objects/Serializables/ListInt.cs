@@ -10,7 +10,7 @@ namespace _13B_REW.Bancho.Packets.Objects.Serializables {
         public ListInt(List<int> list) => this.List = list;
         public ListInt(IEnumerable<int> list) => this.List = list.ToList();
 
-        private List<int> List = new();
+        public List<int> List = new();
 
         public override void ReadFromStream(Stream stream) {
             using BanchoReader reader = new(stream);

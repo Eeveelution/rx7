@@ -63,7 +63,7 @@ namespace _13B_REW.Bancho.Packets.Enums {
         /// <summary>
         /// osu! is requesting to join a Chat Channel
         /// </summary>
-        OsuChannelJoin              = 61,
+        OsuChannelJoin              = 63,
         /// <summary>
         /// osu! is requesting more Information about some Beatmaps
         /// </summary>
@@ -133,11 +133,11 @@ namespace _13B_REW.Bancho.Packets.Enums {
         /// <summary>
         /// Bancho is informing osu! that a certain user has joined the Multiplayer Lobby
         /// </summary>
-        BanchoLobbyJoin             = 29,
+        BanchoLobbyJoin             = 34,
         /// <summary>
         /// Bancho is informing osu! that a certain user has left the Multiplayer Lobby
         /// </summary>
-        BanchoLobbyPart             = 30,
+        BanchoLobbyPart             = 35,
         /// <summary>
         /// Bancho is giving osu! a certain users Presence Information
         /// </summary>

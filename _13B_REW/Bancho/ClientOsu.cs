@@ -12,6 +12,7 @@ using EeveeTools.Database;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
 using MySqlConnector;
+using String=_13B_REW.Bancho.Packets.Objects.Serializables.String;
 
 namespace _13B_REW.Bancho {
     public class ClientOsu : TcpClientHandler {
@@ -200,6 +201,70 @@ namespace _13B_REW.Bancho {
                 case PacketType.OsuStopSpectating: {
                     this.SpectatingClient?.StopSpectating(this);
                     this.SpectatingClient = null;
+
+                    break;
+                }
+
+                case PacketType.OsuQuit: {
+                    this.Cleanup();
+                    break;
+                }
+
+                case PacketType.OsuCantSpectate: {
+                    this.SpectatingClient?.SpectatorCantSpectate(this);
+                    break;
+                }
+
+                case PacketType.OsuSendIrcMessagePrivate: {
+                    Message privateMessage = new(packetStream);
+
+                    ClientOsu foundClient = ClientManager.ClientsByUsername.GetValueOrDefault(privateMessage.Target, null);
+                    foundClient?.IrcMessage(privateMessage);
+
+                    break;
+                }
+
+                case PacketType.OsuUserStatsRequest: {
+                    ListInt users = new(packetStream);
+
+                    foreach (int i in users.List) {
+                        ClientOsu foundClient = ClientManager.ClientsByUserId.GetValueOrDefault(i, null);
+
+                        if (foundClient != null) {
+                            this.UserStats(foundClient.UserStats);
+                            this.UserPresence(foundClient.UserPresence);
+                        }
+                    }
+
+                    break;
+                }
+
+                case PacketType.OsuRecieveUserStatusUpdates: {
+                    foreach (ClientOsu clientOsu in ClientManager.ClientsByUserId.Values) {
+                        this.UserStats(clientOsu.UserStats);
+                        this.UserPresence(clientOsu.UserPresence);
+                    }
+
+                    break;
+                }
+
+                case PacketType.OsuChannelLeave: {
+                    String channelName = new(packetStream);
+
+                    this.JoinedChannels.Find(channel => channel.GetName() == channelName)?.Part(this);
+
+                    break;
+                }
+
+                case PacketType.OsuChannelJoin: {
+                    String channelName = new(packetStream);
+                    Channel foundChannel = ChannelManager.Channels.GetValueOrDefault(channelName, null);
+
+                    if (foundChannel != null) {
+                        foundChannel.Join(this);
+
+                        this.JoinedChannels.Add(foundChannel);
+                    }
 
                     break;
                 }
