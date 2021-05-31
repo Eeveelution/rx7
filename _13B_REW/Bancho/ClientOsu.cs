@@ -140,6 +140,11 @@ namespace _13B_REW.Bancho {
                 Bancho.BroadcastPacket(osu => osu.UserPresence(this.UserPresence));
 
                 this.RotaryBotMessageOsu("Welcome to RX7!");
+                this.Announce("Welcome to RX7!");
+
+                this.ChannelAvailable("#available");
+                this.ChannelAvailableAutojoin("#autojoin");
+
                 Console.WriteLine($"[Bancho] Welcome {this.Username}!");
 
                 ClientManager.RegisterClient(this);
@@ -167,110 +172,117 @@ namespace _13B_REW.Bancho {
 
             #endif
 
-            switch (packetType) {
-                case PacketType.OsuStatusUpdate: {
-                    StatusUpdate update = new(packetStream);
+            try {
+                switch (packetType) {
+                    case PacketType.OsuStatusUpdate: {
+                        StatusUpdate update = new(packetStream);
 
-                    this.UserStats.StatusUpdate = update;
-                    this.OwnStats();
+                        this.UserStats.StatusUpdate = update;
+                        this.OwnStats();
 
-                    Bancho.BroadcastPacket(osu => osu.UserPresence(this.UserPresence));
-                    break;
-                }
-                case PacketType.OsuRequestStatusUpdate: {
-                    this.OwnPresence();
-                    this.OwnStats();
-                    break;
-                }
-                case PacketType.OsuSendIrcMessage: {
-                    Message message = new(packetStream);
-                    message.GetChannel().SendMessage(this, message);
-                    break;
-                }
-                case PacketType.OsuSpectateFrames: {
-                    ReplayFrameBundle bundle = new(packetStream);
-
-                    foreach (ClientOsu spectator in this.Spectators) {
-                        spectator.SpectateFrames(bundle);
+                        Bancho.BroadcastPacket(osu => osu.UserPresence(this.UserPresence));
+                        break;
                     }
-
-                    break;
-                }
-                case PacketType.OsuStartSpectating: {
-                    Int userId = new(packetStream);
-
-                    ClientOsu foundClient = ClientManager.Get(userId);
-
-                    if (foundClient != null) {
-                        this.SpectatingClient = foundClient;
-                        this.SpectatingClient.StartSpectating(this);
+                    case PacketType.OsuRequestStatusUpdate: {
+                        this.OwnPresence();
+                        this.OwnStats();
+                        break;
                     }
+                    case PacketType.OsuSendIrcMessage: {
+                        Message message = new(packetStream);
+                        message.GetChannel().SendMessage(this, message);
 
-                    break;
-                }
-                case PacketType.OsuStopSpectating: {
-                    this.SpectatingClient?.StopSpectating(this);
-                    this.SpectatingClient = null;
+                        this.ChannelRevoked("#autojoin");
+                        break;
+                    }
+                    case PacketType.OsuSpectateFrames: {
+                        ReplayFrameBundle bundle = new(packetStream);
 
-                    break;
-                }
-                case PacketType.OsuQuit: {
-                    this.Cleanup();
-                    break;
-                }
-                case PacketType.OsuCantSpectate: {
-                    this.SpectatingClient?.SpectatorCantSpectate(this);
-                    break;
-                }
-                case PacketType.OsuSendIrcMessagePrivate: {
-                    Message privateMessage = new(packetStream);
+                        foreach (ClientOsu spectator in this.Spectators) {
+                            spectator.SpectateFrames(bundle);
+                        }
 
-                    ClientOsu foundClient = ClientManager.ClientsByUsername.GetValueOrDefault(privateMessage.Target, null);
-                    foundClient?.IrcMessage(privateMessage);
+                        break;
+                    }
+                    case PacketType.OsuStartSpectating: {
+                        Int userId = new(packetStream);
 
-                    break;
-                }
-                case PacketType.OsuUserStatsRequest: {
-                    ListInt users = new(packetStream);
-
-                    foreach (int i in users.List) {
-                        ClientOsu foundClient = ClientManager.Get(i);
+                        ClientOsu foundClient = ClientManager.Get(userId);
 
                         if (foundClient != null) {
-                            this.UserStats(foundClient.UserStats);
-                            this.UserPresence(foundClient.UserPresence);
+                            this.SpectatingClient = foundClient;
+                            this.SpectatingClient.StartSpectating(this);
                         }
+
+                        break;
                     }
+                    case PacketType.OsuStopSpectating: {
+                        this.SpectatingClient?.StopSpectating(this);
+                        this.SpectatingClient = null;
 
-                    break;
-                }
-                case PacketType.OsuRecieveUserStatusUpdates: {
-                    foreach (ClientOsu clientOsu in ClientManager.ClientList) {
-                        this.UserStats(clientOsu.UserStats);
-                        this.UserPresence(clientOsu.UserPresence);
+                        break;
                     }
-
-                    break;
-                }
-                case PacketType.OsuChannelLeave: {
-                    String channelName = new(packetStream);
-
-                    this.JoinedChannels.Find(channel => channel.GetName() == channelName)?.Part(this);
-
-                    break;
-                }
-                case PacketType.OsuChannelJoin: {
-                    String channelName = new(packetStream);
-                    Channel foundChannel = ChannelManager.Channels.GetValueOrDefault(channelName, null);
-
-                    if (foundChannel != null) {
-                        foundChannel.Join(this);
-
-                        this.JoinedChannels.Add(foundChannel);
+                    case PacketType.OsuQuit: {
+                        this.Cleanup();
+                        break;
                     }
+                    case PacketType.OsuCantSpectate: {
+                        this.SpectatingClient?.SpectatorCantSpectate(this);
+                        break;
+                    }
+                    case PacketType.OsuSendIrcMessagePrivate: {
+                        Message privateMessage = new(packetStream);
 
-                    break;
+                        ClientOsu foundClient = ClientManager.ClientsByUsername.GetValueOrDefault(privateMessage.Target, null);
+                        foundClient?.IrcMessage(privateMessage);
+
+                        break;
+                    }
+                    case PacketType.OsuUserStatsRequest: {
+                        ListInt users = new(packetStream);
+
+                        foreach (int i in users.List) {
+                            ClientOsu foundClient = ClientManager.Get(i);
+
+                            if (foundClient != null) {
+                                this.UserStats(foundClient.UserStats);
+                                this.UserPresence(foundClient.UserPresence);
+                            }
+                        }
+
+                        break;
+                    }
+                    case PacketType.OsuRecieveUserStatusUpdates: {
+                        foreach (ClientOsu clientOsu in ClientManager.ClientList) {
+                            this.UserStats(clientOsu.UserStats);
+                            this.UserPresence(clientOsu.UserPresence);
+                        }
+
+                        break;
+                    }
+                    case PacketType.OsuChannelLeave: {
+                        String channelName = new(packetStream);
+
+                        this.JoinedChannels.Find(channel => channel.GetName() == channelName)?.Part(this);
+
+                        break;
+                    }
+                    case PacketType.OsuChannelJoin: {
+                        String channelName = new(packetStream);
+                        Channel foundChannel = ChannelManager.Channels.GetValueOrDefault(channelName, null);
+
+                        if (foundChannel != null) {
+                            foundChannel.Join(this);
+
+                            this.JoinedChannels.Add(foundChannel);
+                        }
+
+                        break;
+                    }
                 }
+            }
+            catch (Exception e) {
+                Console.WriteLine(e);
             }
         }
 

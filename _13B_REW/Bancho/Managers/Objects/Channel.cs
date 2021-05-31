@@ -56,7 +56,8 @@ namespace _13B_REW.Bancho.Managers.Objects {
 
             if (successResults == this.ChannelRules.Count) {
                 foreach (ClientOsu connectedClient in this._connectedClients) {
-                    connectedClient.IrcMessage(message);
+                    if(connectedClient != clientOsu)
+                        connectedClient.IrcMessage(message);
                 }
             }
         }

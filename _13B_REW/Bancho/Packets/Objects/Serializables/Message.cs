@@ -9,7 +9,7 @@ namespace _13B_REW.Bancho.Packets.Objects.Serializables {
         public Message(string sender, string text, string target) {
             this.Sender = sender;
             this.Text   = text;
-            this.Target = sender;
+            this.Target = target;
         }
         public Message(Stream readStream) => this.ReadFromStream(readStream);
         [RetainDeclarationOrder] public string Sender { get; set; }

@@ -14,12 +14,12 @@ namespace _13B_REW.Bancho.Managers {
             if (ClientsByUsername.ContainsKey(username))
                 ClientsByUsername.Remove(username, out _);
 
-            ClientsByUsername.AddOrUpdate(username, clientOsu, null!);
+            ClientsByUsername.AddOrUpdate(username, clientOsu, (_, _) => { return null; });
 
             if (ClientsByUserId.ContainsKey(userId))
                 ClientsByUserId.Remove(userId, out _);
 
-            ClientsByUserId.AddOrUpdate(userId, clientOsu, null!);
+            ClientsByUserId.AddOrUpdate(userId, clientOsu, (_, _) => { return null; });
         }
 
         public static void UnregisterClient(ClientOsu clientOsu) {

@@ -9,6 +9,8 @@ namespace _13B_REW.Bancho.Packets {
                 Compressed = false,
                 PacketData = null
             };
+
+            clientOsu.SendData(packet.ToBytes());
         }
     }
 }

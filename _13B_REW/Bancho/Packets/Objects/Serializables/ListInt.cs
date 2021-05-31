@@ -15,7 +15,7 @@ namespace _13B_REW.Bancho.Packets.Objects.Serializables {
         public override void ReadFromStream(Stream stream) {
             using BanchoReader reader = new(stream);
 
-            int count = reader.ReadInt32();
+            int count = reader.ReadInt16();
 
             for(int i = 0; i != count; i++)
                 this.List.Add(reader.ReadInt32());
