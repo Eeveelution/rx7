@@ -5,6 +5,7 @@ namespace _13B_REW.Bancho.Managers {
     public class ClientManager {
         public static ConcurrentDictionary<int, ClientOsu>    ClientsByUserId   = new();
         public static ConcurrentDictionary<string, ClientOsu> ClientsByUsername = new();
+        public static IEnumerable<ClientOsu> ClientList => ClientsByUserId.Values;
 
         public static void RegisterClient(ClientOsu clientOsu) {
             string username = clientOsu.Username;
@@ -28,5 +29,9 @@ namespace _13B_REW.Bancho.Managers {
             ClientsByUsername.Remove(username, out _);
             ClientsByUserId.Remove(userId, out _);
         }
+
+        public static ClientOsu Get(int userId) => ClientsByUserId.GetValueOrDefault(userId, null);
+        public static ClientOsu Get(string username) => ClientsByUsername.GetValueOrDefault(username, null);
+
     }
 }

@@ -140,6 +140,9 @@ namespace _13B_REW.Bancho {
                 Bancho.BroadcastPacket(osu => osu.UserPresence(this.UserPresence));
 
                 this.RotaryBotMessageOsu("Welcome to RX7!");
+                Console.WriteLine($"[Bancho] Welcome {this.Username}!");
+
+                ClientManager.RegisterClient(this);
             }
             catch(Exception e) {
                 this.LoginResult(LoginResult.ServersideError);
@@ -158,7 +161,11 @@ namespace _13B_REW.Bancho {
             using MemoryStream packetStream = new(fullPacketBytes);
             using BanchoReader packetReader = new(packetStream);
 
-            Console.WriteLine($"got packet {packetType.ToString()}");
+            #if DEBUG
+
+            Console.WriteLine($"[Bancho:ClientOsu] Recieved {packetType.ToString()} with length {length}");
+
+            #endif
 
             switch (packetType) {
                 case PacketType.OsuStatusUpdate: {
@@ -192,7 +199,7 @@ namespace _13B_REW.Bancho {
                 case PacketType.OsuStartSpectating: {
                     Int userId = new(packetStream);
 
-                    ClientOsu foundClient = ClientManager.ClientsByUserId.GetValueOrDefault(userId, null);
+                    ClientOsu foundClient = ClientManager.Get(userId);
 
                     if (foundClient != null) {
                         this.SpectatingClient = foundClient;
@@ -201,24 +208,20 @@ namespace _13B_REW.Bancho {
 
                     break;
                 }
-
                 case PacketType.OsuStopSpectating: {
                     this.SpectatingClient?.StopSpectating(this);
                     this.SpectatingClient = null;
 
                     break;
                 }
-
                 case PacketType.OsuQuit: {
                     this.Cleanup();
                     break;
                 }
-
                 case PacketType.OsuCantSpectate: {
                     this.SpectatingClient?.SpectatorCantSpectate(this);
                     break;
                 }
-
                 case PacketType.OsuSendIrcMessagePrivate: {
                     Message privateMessage = new(packetStream);
 
@@ -227,12 +230,11 @@ namespace _13B_REW.Bancho {
 
                     break;
                 }
-
                 case PacketType.OsuUserStatsRequest: {
                     ListInt users = new(packetStream);
 
                     foreach (int i in users.List) {
-                        ClientOsu foundClient = ClientManager.ClientsByUserId.GetValueOrDefault(i, null);
+                        ClientOsu foundClient = ClientManager.Get(i);
 
                         if (foundClient != null) {
                             this.UserStats(foundClient.UserStats);
@@ -242,16 +244,14 @@ namespace _13B_REW.Bancho {
 
                     break;
                 }
-
                 case PacketType.OsuRecieveUserStatusUpdates: {
-                    foreach (ClientOsu clientOsu in ClientManager.ClientsByUserId.Values) {
+                    foreach (ClientOsu clientOsu in ClientManager.ClientList) {
                         this.UserStats(clientOsu.UserStats);
                         this.UserPresence(clientOsu.UserPresence);
                     }
 
                     break;
                 }
-
                 case PacketType.OsuChannelLeave: {
                     String channelName = new(packetStream);
 
@@ -259,7 +259,6 @@ namespace _13B_REW.Bancho {
 
                     break;
                 }
-
                 case PacketType.OsuChannelJoin: {
                     String channelName = new(packetStream);
                     Channel foundChannel = ChannelManager.Channels.GetValueOrDefault(channelName, null);
@@ -272,7 +271,6 @@ namespace _13B_REW.Bancho {
 
                     break;
                 }
-
             }
         }
 

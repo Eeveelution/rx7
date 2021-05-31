@@ -9,7 +9,7 @@ namespace _13B_REW.Bancho.SchedulerJobs {
     public class BanchoPinger : AsyncSchedulableJob {
         public override TimeSpan ExecuteTimeout { get; } = TimeSpan.FromSeconds(15);
         public override async Task ExecuteJob() {
-            foreach (ClientOsu clientOsu in ClientManager.ClientsByUserId.Values) {
+            foreach (ClientOsu clientOsu in ClientManager.ClientList) {
                 clientOsu.Ping();
             }
         }

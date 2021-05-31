@@ -19,16 +19,18 @@ namespace _13B_REW.Bancho {
 
             _scheduler.AddJob(new BanchoPinger());
             _scheduler.RunScheduler();
+
+            Console.WriteLine("[Bancho] Bancho Initialized successfully...");
         }
 
         public static void BroadcastPacket(Action<ClientOsu> packetAction) {
-            foreach (ClientOsu clientOsu in ClientManager.ClientsByUserId.Values) {
+            foreach (ClientOsu clientOsu in ClientManager.ClientList) {
                 packetAction(clientOsu);
             }
         }
 
         public static void BroadcastPacketToOthers(Action<ClientOsu> packetAction, ClientOsu self) {
-            foreach (ClientOsu clientOsu in ClientManager.ClientsByUserId.Values) {
+            foreach (ClientOsu clientOsu in ClientManager.ClientList) {
                 if(clientOsu != self)
                     packetAction(clientOsu);
             }
