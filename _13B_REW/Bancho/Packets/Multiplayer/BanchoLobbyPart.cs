@@ -2,7 +2,7 @@ using _13B_REW.Bancho.Attributes;
 using _13B_REW.Bancho.Packets.Enums;
 using _13B_REW.Bancho.Packets.Objects;
 
-namespace _13B_REW.Bancho.Packets {
+namespace _13B_REW.Bancho.Packets.Multiplayer {
     public class BanchoLobbyPart : Serializable {
         public BanchoLobbyPart(){}
         public BanchoLobbyPart(int userId) => this.User = userId;

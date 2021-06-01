@@ -2,7 +2,7 @@ using _13B_REW.Bancho.Attributes;
 using _13B_REW.Bancho.Packets.Enums;
 using _13B_REW.Bancho.Packets.Objects;
 
-namespace _13B_REW.Bancho.Packets {
+namespace _13B_REW.Bancho.Packets.Other {
     public class BanchoAnnounce : Serializable {
         public BanchoAnnounce(){}
         public BanchoAnnounce(string announcement) => this.Announcement = announcement;

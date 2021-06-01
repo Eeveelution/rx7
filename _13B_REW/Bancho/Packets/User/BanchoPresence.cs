@@ -3,7 +3,7 @@ using _13B_REW.Bancho.Packets.Enums;
 using _13B_REW.Bancho.Packets.Objects;
 using _13B_REW.Bancho.Packets.Objects.Serializables;
 
-namespace _13B_REW.Bancho.Packets {
+namespace _13B_REW.Bancho.Packets.User {
     public class BanchoPresence : Serializable {
         [RetainDeclarationOrder] public UserPresence Presence { get; set; }
 

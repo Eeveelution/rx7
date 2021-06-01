@@ -2,7 +2,7 @@ using _13B_REW.Bancho.Attributes;
 using _13B_REW.Bancho.Packets.Enums;
 using _13B_REW.Bancho.Packets.Objects;
 
-namespace _13B_REW.Bancho.Packets {
+namespace _13B_REW.Bancho.Packets.User {
     public class BanchoLoginResponse : Serializable {
         [RetainDeclarationOrder] public int UserId { get; set; }
     }

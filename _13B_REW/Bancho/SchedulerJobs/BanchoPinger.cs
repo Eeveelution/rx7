@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using _13B_REW.Bancho.Managers;
 using _13B_REW.Bancho.Packets;
+using _13B_REW.Bancho.Packets.Other;
 using EeveeTools.Utilities.PollingJobScheduler;
 
 namespace _13B_REW.Bancho.SchedulerJobs {

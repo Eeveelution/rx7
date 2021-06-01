@@ -2,7 +2,7 @@ using _13B_REW.Bancho.Attributes;
 using _13B_REW.Bancho.Packets.Enums;
 using _13B_REW.Bancho.Packets.Objects;
 
-namespace _13B_REW.Bancho.Packets {
+namespace _13B_REW.Bancho.Packets.Spectator {
     public class BanchoSpectatorLeft : Serializable {
         public BanchoSpectatorLeft(){}
         public BanchoSpectatorLeft(int userId) => this.Spectator = userId;
