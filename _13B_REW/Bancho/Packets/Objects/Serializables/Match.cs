@@ -19,7 +19,11 @@ namespace _13B_REW.Bancho.Packets.Objects.Serializables {
         public SlotTeams[]  SlotTeams    = new SlotTeams[8];
         public int[]        SlotIds      = new int[8];
 
+        public ClientOsu[] ConnectedClients = new ClientOsu[8];
+
         public int       HostUserId;
+        public ClientOsu HostClient;
+
         public PlayModes GamePlaymode;
 
         public MatchScoringTypes MatchScoringType;
