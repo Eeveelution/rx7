@@ -1,5 +1,9 @@
+using System;
+
 namespace _13B_REW.Bancho.Packets.Enums {
+    [Flags]
     public enum SlotStatus : byte {
+        None,
         Open          = 1,
         Locked        = 2,
         NotReady      = 4,
