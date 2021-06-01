@@ -33,6 +33,8 @@ namespace _13B_REW.Bancho {
         private readonly object          _spectatorLock   = new();
         public           ClientOsu       SpectatingClient = null;
 
+        public ServersideMatch CurrentMultiplayerMatch = null;
+
         public string Username => this.DatabaseUser.Username;
         public int UserId => this.DatabaseUser.UserId;
 

@@ -1,4 +1,6 @@
+using _13B_REW.Bancho.Packets.Chat;
 using _13B_REW.Bancho.Packets.Enums;
+using _13B_REW.Bancho.Packets.Multiplayer;
 using _13B_REW.Bancho.Packets.Objects;
 using _13B_REW.Bancho.Packets.Objects.Serializables;
 // ReSharper disable InconsistentlySynchronizedField
@@ -23,13 +25,22 @@ namespace _13B_REW.Bancho.Managers.Objects {
             }
         }
 
-        public bool Join(ClientOsu clientOsu, MatchJoin matchJoin) {
+        public void Join(ClientOsu clientOsu, MatchJoin matchJoin) {
             lock (this._matchInformation.SlotStatuses) {
                 for (int i = 0; i < 7; i++) {
                     if (this._matchInformation.SlotStatuses[i] == SlotStatus.Open) {
+                        this.SetSlot(i, clientOsu);
 
+                        clientOsu.ChannelAvailableAutojoin("#multiplayer");
+                        clientOsu.MatchJoinSuccess(this);
+                        clientOsu.CurrentMultiplayerMatch = this;
+
+                        this.UpdateMatch();
+
+                        return;
                     }
                 }
+                clientOsu.MatchJoinFail();
             }
         }
 
@@ -76,8 +87,8 @@ namespace _13B_REW.Bancho.Managers.Objects {
             lock (this._matchInformation) {
                 this.BroadcastPacket(new BanchoMatchUpdate(this._matchInformation));
                 try {
-                    Lobby.SenkoMultiplayerRooms[this._matchInformation.MatchId].HandleUpdate(this._matchInformation);
-                    Lobby.BroadcastMatchUpdates();
+                    MultiplayerManager.MatchesById[this._matchInformation.MatchId].HandleUpdate(this._matchInformation);
+                    MultiplayerManager.BroadcastMatchUpdates();
                 }
                 catch {
                     // ignored
@@ -88,21 +99,21 @@ namespace _13B_REW.Bancho.Managers.Objects {
         /// Broadcasts Packet to everyone in the match
         /// </summary>
         /// <param name="outgoingPacket">Packet</param>
-        private void BroadcastPacket(OutgoingPacket outgoingPacket) {
+        private void BroadcastPacket(Serializable outgoingPacket) {
             lock (this._matchInformation)
                 foreach (ClientOsu clientOsu in this._matchInformation.ConnectedClients)
-                    clientOsu?.QueuePacket(outgoingPacket);
+                    clientOsu?.SendData(outgoingPacket.ToBytes());
         }
         /// <summary>
         /// Broadcasts Packet to everyone in the match Except `ClientOsu`
         /// </summary>
         /// <param name="clientOsu">Who not to send to</param>
         /// <param name="outgoingPacket">Packet</param>
-        public void BroadcastPacketToOthers(ClientOsu clientOsu, OutgoingPacket outgoingPacket) {
+        public void BroadcastPacketToOthers(ClientOsu clientOsu, Serializable outgoingPacket) {
             lock (this._matchInformation)
                 foreach (ClientOsu client in this._matchInformation.ConnectedClients)
                     if(client != clientOsu)
-                        client?.QueuePacket(outgoingPacket);
+                        clientOsu?.SendData(outgoingPacket.ToBytes());
         }
         /// <summary>
         /// Gets the Slot ID of a Player in the Room
@@ -112,9 +123,32 @@ namespace _13B_REW.Bancho.Managers.Objects {
         private int GetSlotIdFromPlayerId(int userId) {
             for(int i = 0; i != 8; i++)
                 lock (this._matchInformation)
-                    if (this._matchInformation.SlotId[i] == userId)
+                    if (this._matchInformation.SlotIds[i] == userId)
                         return i;
             return -1;
+        }
+        /// <summary>
+        /// Handles a Match Update
+        /// </summary>
+        /// <param name="match">Read Match</param>
+        private void HandleUpdate(Match match) {
+            lock (this._matchInformation) {
+                //Update all Member Variables
+                this._matchInformation.MatchId          = (byte) match.MatchId;
+                this._matchInformation.InProgress       =        match.InProgress;
+                this._matchInformation.MatchTeamType    =        match.MatchTeamType;
+                this._matchInformation.EnabledMods      =        match.EnabledMods;
+                this._matchInformation.GameName         =        match.GameName;
+                this._matchInformation.BeatmapText      =        match.BeatmapText;
+                this._matchInformation.BeatmapId        =        match.BeatmapId;
+                this._matchInformation.BeatmapChecksum  =        match.BeatmapChecksum;
+                this._matchInformation.SlotStatuses     =        match.SlotStatuses;
+                this._matchInformation.Password         =        match.Password;
+                this._matchInformation.MatchTeamType    =        match.MatchTeamType;
+                this._matchInformation.GamePlaymode     =        match.GamePlaymode;
+                this._matchInformation.MatchScoringType =        match.MatchScoringType;
+                this._matchInformation.SlotTeams        =        match.SlotTeams;
+            }
         }
         #endregion
     }

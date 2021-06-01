@@ -162,14 +162,30 @@ namespace _13B_REW.Bancho.Packets.Enums {
         /// <summary>
         /// Bancho is telling osu! that another chat channel is available to join
         /// </summary>
-        BanchoChannelAvailable         = 65,
+        BanchoChannelAvailable = 65,
         /// <summary>
         /// Bancho is telling osu! that a chat channel has been removed
         /// </summary>
-        BanchoChannelRevoked           = 66,
+        BanchoChannelRevoked = 66,
         /// <summary>
         /// Bancho is telling osu! that a chat channel is available to join and to join it automatically
         /// </summary>
         BanchoChannelAvailableAutoJoin = 67,
+        /// <summary>
+        /// Informs osu! about a new Match that has been created
+        /// </summary>
+        BanchoMatchNew = 26,
+        /// <summary>
+        /// Informs osu! about a match that just got updated
+        /// </summary>
+        BanchoMatchUpdate = 27,
+        /// <summary>
+        /// Informs osu! that the match it was trying to join has accepted the request
+        /// </summary>
+        BanchoMatchJoinSuccess = 36,
+        /// <summary>
+        /// Informs osu! that joining the match failed
+        /// </summary>
+        BanchoMatchJoinFail = 37,
     }
 }
