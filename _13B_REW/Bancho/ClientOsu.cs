@@ -41,11 +41,11 @@ namespace _13B_REW.Bancho {
         #region TcpClientHandler Overrides
 
         protected override void HandleData(byte[] data) {
-            if (this.UserStats == null || this.UserPresence == null || this.UserInformation == null || DatabaseUser == null) {
+            if (this.UserStats == null || this.UserPresence == null || this.UserInformation == null || this.DatabaseUser == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
 
-                string username = loginReader.ReadLine();
-                string password = loginReader.ReadLine();
+                string username   = loginReader.ReadLine();
+                string password   = loginReader.ReadLine();
                 string clientData = loginReader.ReadLine();
 
                 this.HandleLogin(username, password, clientData);
@@ -144,12 +144,6 @@ namespace _13B_REW.Bancho {
 
                 Bancho.BroadcastPacket(osu => osu.UserStats(this.UserStats));
                 Bancho.BroadcastPacket(osu => osu.UserPresence(this.UserPresence));
-
-                this.RotaryBotMessageOsu("Welcome to RX7!");
-                this.Announce("Welcome to RX7!");
-
-                this.ChannelAvailable("#available");
-                this.ChannelAvailableAutojoin("#autojoin");
 
                 this.SetMultiplayerFlags();
 
@@ -284,6 +278,14 @@ namespace _13B_REW.Bancho {
 
                             this.JoinedChannels.Add(foundChannel);
                         }
+
+                        break;
+                    }
+                    case PacketType.OsuMatchNew: {
+                        this.CurrentMultiplayerMatch?.Leave(this);
+
+                        Match createdMatch = new(packetStream);
+                        MultiplayerManager.MatchNew(this, createdMatch);
 
                         break;
                     }
