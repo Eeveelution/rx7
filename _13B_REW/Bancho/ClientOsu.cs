@@ -93,7 +93,7 @@ namespace _13B_REW.Bancho {
                     new MySqlParameter("@username", username)
                 };
 
-                IReadOnlyDictionary<string, object>[] userFetchResults = DatabaseHandler.Query(GlobalVariables.DatabaseContext, userFetchSql, userFetchParams);
+                IReadOnlyDictionary<string, object>[] userFetchResults = MySqlDatabaseHandler.MySqlQuery(GlobalVariables.DatabaseContext, userFetchSql, userFetchParams);
 
                 if (userFetchResults.Length == 0) {
                     this.LoginResult(LoginResult.WrongLogin);
