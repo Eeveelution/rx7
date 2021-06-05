@@ -104,8 +104,8 @@ namespace _13B_REW.Bancho.Managers.Objects {
             lock (this._matchInformation) {
                 this._matchInformation.HostUserId = this._matchInformation.SlotIds[slot];
                 this._matchInformation.HostClient = this._matchInformation.ConnectedClients[slot];
-
-                this._matchInformation.HostClient.TransferMatchHost();
+                //TODO: transfermatchhost
+                //this._matchInformation.HostClient.TransferMatchHost();
 
                 this.UpdateMatch();
             }
@@ -144,7 +144,8 @@ namespace _13B_REW.Bancho.Managers.Objects {
                         this._matchInformation.SlotStatuses[i] = SlotStatus.Playing;
 
                 this.UpdateMatch();
-                this.BroadcastPacket(client => client.MultiMatchStart());
+                //TODO: MultiMatchStart
+                //this.BroadcastPacket(client => client.MultiMatchStart());
             }
         }
 
@@ -176,8 +177,8 @@ namespace _13B_REW.Bancho.Managers.Objects {
         public void Disband() {
             lock (this._matchInformation) {
                 MultiplayerManager.MatchesById.Remove(this._matchInformation.MatchId, out _);
-
-                Bancho.BroadcastPacket(client => client.MatchDisband(this));
+                //TODO: MatchDisband
+                //Bancho.BroadcastPacket(client => client.MatchDisband(this));
             }
         }
 
@@ -196,7 +197,8 @@ namespace _13B_REW.Bancho.Managers.Objects {
                         if(!this._matchInformation.InProgress)
                             this.MoveSlot(i, hostSlot);
 
-                        this._matchInformation.HostClient.TransferMatchHost();
+                        //TODO: transfermatchhost
+                        //this._matchInformation.HostClient.TransferMatchHost();
                     }
                 }
 
