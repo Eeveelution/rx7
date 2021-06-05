@@ -94,10 +94,10 @@ class CreateUsersTable extends Migration
             $table->integer("catch_acckatu")->default(0);
             $table->integer("catch_accmiss")->default(0);
 
-            $table->integer("replays_watched");
-            $table->tinyInteger("priviledges");
+            $table->integer("replays_watched")->default(0);
+            $table->tinyInteger("priviledges")->default(0);
 
-            $table->timestamps();
+            $table->timestamp("created_at")->useCurrent();
         });
     }
 
