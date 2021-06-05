@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using _13B_REW.Bancho.Database;
+using _13B_REW.Bancho.Helpers;
 using _13B_REW.Bancho.Managers;
 using _13B_REW.Bancho.Managers.Objects;
 using _13B_REW.Bancho.Objects;
@@ -17,6 +18,7 @@ using EeveeTools.Database;
 using EeveeTools.Helpers;
 using EeveeTools.Servers.TCP;
 using MySqlConnector;
+using Npgsql;
 using String=_13B_REW.Bancho.Packets.Objects.Serializables.String;
 
 namespace _13B_REW.Bancho {
@@ -44,8 +46,8 @@ namespace _13B_REW.Bancho {
             if (this.UserStats == null || this.UserPresence == null || this.UserInformation == null || this.DatabaseUser == null) {
                 StreamReader loginReader = new(new MemoryStream(data));
 
-                string username   = loginReader.ReadLine();
-                string password   = loginReader.ReadLine();
+                string username = loginReader.ReadLine();
+                string password = loginReader.ReadLine();
                 string clientData = loginReader.ReadLine();
 
                 this.HandleLogin(username, password, clientData);
@@ -87,13 +89,13 @@ namespace _13B_REW.Bancho {
                     PhysicalNetworkAdressesHashed = splitNetworkData[2]
                 };
 
-                const string userFetchSql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY StandardRankedScore DESC) AS 'StandardRank', ROW_NUMBER() OVER (ORDER BY TaikoRankedScore DESC) AS 'TaikoRank', ROW_NUMBER() OVER (ORDER BY CatchRankedScore DESC) AS 'CatchRank' FROM users) t WHERE Username=@username";
+                const string userFetchSql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY standard_ranked_score DESC) AS standard_rank, ROW_NUMBER() OVER (ORDER BY taiko_ranked_score DESC) AS taiko_rank, ROW_NUMBER() OVER (ORDER BY catch_ranked_score DESC) AS catch_rank FROM users) t WHERE Username=@username";
 
-                MySqlParameter[] userFetchParams = new[] {
-                    new MySqlParameter("@username", username)
+                NpgsqlParameter[] userFetchParams = new[] {
+                    new NpgsqlParameter("@username", username)
                 };
 
-                IReadOnlyDictionary<string, object>[] userFetchResults = MySqlDatabaseHandler.MySqlQuery(GlobalVariables.DatabaseContext, userFetchSql, userFetchParams);
+                IReadOnlyDictionary<string, object>[] userFetchResults = NpgsqlDatabaseHandler.NpgsqlQuery(GlobalVariables.DatabaseContext, userFetchSql, userFetchParams);
 
                 if (userFetchResults.Length == 0) {
                     this.LoginResult(LoginResult.WrongLogin);
@@ -101,7 +103,7 @@ namespace _13B_REW.Bancho {
                 }
 
                 this.DatabaseUser = new DatabaseUser();
-                this.DatabaseUser.MapObject(userFetchResults[0]);
+                this.DatabaseUser.MapDatabaseResults(userFetchResults[0]);
 
                 if (password != this.DatabaseUser.Password) {
                     this.LoginResult(LoginResult.WrongLogin);
@@ -109,11 +111,11 @@ namespace _13B_REW.Bancho {
                 }
 
                 this.UserStats = new UserStats {
-                    UserId      =         this.DatabaseUser.UserId,
-                    Rank        = (int)   this.DatabaseUser.StandardRank,
+                    UserId      = this.DatabaseUser.UserId,
+                    Rank        = (int) this.DatabaseUser.StandardRank,
                     Accuracy    = (float) this.DatabaseUser.StandardAccuracy / 100f,
-                    Playcount   =         this.DatabaseUser.StandardPlaycount,
-                    RankedScore =         this.DatabaseUser.StandardRankedScore,
+                    Playcount   = this.DatabaseUser.StandardPlaycount,
+                    RankedScore = this.DatabaseUser.StandardRankedScore,
                     StatusUpdate = new StatusUpdate() {
                         Action          = "User Just Logged in!",
                         BeatmapChecksum = "none",
@@ -129,14 +131,14 @@ namespace _13B_REW.Bancho {
                     Username        = this.DatabaseUser.Username,
                     Rank            = (int) this.DatabaseUser.StandardRank,
                     AvatarExtension = AvatarExtension.Png,
-                    Country         = (byte)CountryList.List.IndexOf("Unknown"),
+                    Country         = (byte) CountryList.List.IndexOf("Unknown"),
                     //TODO: long and lat gathering
-                    Latitude        = 0,
-                    Longnitude      = 0,
-                    Location        = this.DatabaseUser.Location,
+                    Latitude   = 0,
+                    Longnitude = 0,
+                    Location   = this.DatabaseUser.Location,
                     //TODO: permissions
-                    Permissions     = 0,
-                    Timezone        = byte.Parse(timezone)
+                    Permissions = 0,
+                    Timezone    = byte.Parse(timezone)
                 };
 
                 this.LoginResult(this.DatabaseUser.UserId);
@@ -151,7 +153,7 @@ namespace _13B_REW.Bancho {
 
                 ClientManager.RegisterClient(this);
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 this.LoginResult(LoginResult.ServersideError);
             }
         }
@@ -159,7 +161,7 @@ namespace _13B_REW.Bancho {
         private void HandlePacketData(Stream readStream) {
             using BanchoReader reader = new(readStream);
 
-            PacketType packetType = (PacketType)reader.ReadUInt16();
+            PacketType packetType = (PacketType) reader.ReadUInt16();
             bool compressed = reader.ReadBoolean();
             int length = reader.ReadInt32();
 
@@ -168,11 +170,11 @@ namespace _13B_REW.Bancho {
             using MemoryStream packetStream = new(fullPacketBytes);
             using BanchoReader packetReader = new(packetStream);
 
-            #if DEBUG
+#if DEBUG
 
             Console.WriteLine($"[Bancho:ClientOsu] Recieved {packetType.ToString()} with length {length}");
 
-            #endif
+#endif
 
             try {
                 switch (packetType) {

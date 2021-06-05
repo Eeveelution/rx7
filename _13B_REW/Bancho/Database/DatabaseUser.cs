@@ -107,7 +107,7 @@ namespace _13B_REW.Bancho.Database {
 
 
         public int ReplaysWatched { get; set; }
-        public sbyte Priviledges { get; set; }
+        public short Priviledges { get; set; }
 
 
 
